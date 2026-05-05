@@ -120,6 +120,7 @@ export function useGameLogic() {
     startRound,
     beginPlay,
     goToVoting,
+    revealResult: goToVoting,
     submitVote,
     nextRound,
     resetGame

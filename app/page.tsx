@@ -1,11 +1,18 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Settings, Info, Clock, Check, X, RotateCcw, EyeOff, ShieldCheck, AlertTriangle, Image as ImageIcon, Type, LayoutGrid } from 'lucide-react';
+import { 
+  Play, Settings, Info, Clock, Check, X, RotateCcw, 
+  EyeOff, ShieldCheck, AlertTriangle, Image as ImageIcon, 
+  Type, LayoutGrid, Trophy, Heart, Skull, Zap, Target, Swords 
+} from 'lucide-react';
 import { useGameLogic } from '../hooks/useGameLogic';
 import { GameCard } from '../components/GameCard';
 import { WORD_CATEGORIES } from '../constants/words';
+import { Scoreboard } from '../components/Scoreboard';
+import { ScoringMode } from '../lib/types';
+import { InstructionsModal } from '../components/InstructionsModal';
 
 const IMAGE_CATEGORY_ICONS: Record<string, string> = {
   flags: '🌍',
@@ -15,8 +22,31 @@ const IMAGE_CATEGORY_ICONS: Record<string, string> = {
   geek: '👾'
 };
 
+const SCORING_DESCRIPTIONS: Record<ScoringMode, { title: string, desc: string, icon: any, color: string }> = {
+  ORIGINAL: {
+    title: 'Modo Original',
+    desc: 'Sistema clásico. Puntos por engañar o descubrir.',
+    icon: Target,
+    color: 'text-blue-400'
+  },
+  MANSALVA: {
+    title: 'Puntos a Mansalva',
+    desc: 'Modo caótico. El que sea elegido suma siempre.',
+    icon: Zap,
+    color: 'text-yellow-400'
+  },
+  MUERTE: {
+    title: 'Muerte por Puntos',
+    desc: 'Los jugadores tienen HP. El último en pie gana.',
+    icon: Swords,
+    color: 'text-rose-500'
+  }
+};
+
 export default function Home() {
   const game = useGameLogic();
+  const [showScoreboard, setShowScoreboard] = useState(false);
+  const [isInstructionsOpen, setIsInstructionsOpen] = useState(false);
 
   return (
     <main className="flex-1 flex flex-col items-center justify-center p-6 relative overflow-hidden bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-gray-900 via-[#0f111a] to-black min-h-screen">
@@ -24,6 +54,11 @@ export default function Home() {
       {/* Background Decor */}
       <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-purple-600/10 rounded-full blur-[100px] pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-blue-600/10 rounded-full blur-[100px] pointer-events-none" />
+
+      <InstructionsModal 
+        isOpen={isInstructionsOpen} 
+        onClose={() => setIsInstructionsOpen(false)} 
+      />
 
       <AnimatePresence mode="wait">
         
@@ -56,14 +91,29 @@ export default function Home() {
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
                 <Play className="w-6 h-6 fill-blue-400 text-blue-400" />
-                <span className="text-xl font-bold tracking-[0.2em] uppercase">Comenzar</span>
+                <span className="text-xl font-bold tracking-[0.2em] uppercase">Nueva Partida</span>
               </button>
 
-              <button className="flex items-center justify-center gap-3 w-full py-4 bg-transparent border border-white/10 rounded-2xl hover:bg-white/5 transition-all text-gray-400">
-                <Info className="w-5 h-5" />
-                <span className="font-semibold uppercase tracking-wider text-sm">Instrucciones</span>
-              </button>
+              <div className="grid grid-cols-2 gap-4">
+                <button 
+                  onClick={() => setShowScoreboard(!showScoreboard)}
+                  className="flex items-center justify-center gap-3 w-full py-4 bg-transparent border border-white/10 rounded-2xl hover:bg-white/5 transition-all text-gray-400"
+                >
+                  <Trophy className="w-5 h-5" />
+                  <span className="font-semibold uppercase tracking-wider text-[10px]">Puntos</span>
+                </button>
+
+                <button 
+                  onClick={() => setIsInstructionsOpen(true)}
+                  className="flex items-center justify-center gap-3 w-full py-4 bg-transparent border border-white/10 rounded-2xl hover:bg-white/5 transition-all text-gray-400"
+                >
+                  <Info className="w-5 h-5" />
+                  <span className="font-semibold uppercase tracking-wider text-[10px]">Instrucciones</span>
+                </button>
+              </div>
             </div>
+
+            {showScoreboard && <Scoreboard players={game.scoreManager.players} scoringMode={game.scoringMode} />}
           </motion.div>
         )}
 
@@ -115,6 +165,47 @@ export default function Home() {
           </motion.div>
         )}
 
+        {/* SCORING SELECT STATE */}
+        {game.gameState === 'scoring_select' && (
+          <motion.div 
+            key="scoring_select"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className="flex flex-col items-center max-w-md w-full gap-8 z-10"
+          >
+            <div className="text-center space-y-2">
+              <h2 className="text-3xl font-black text-white uppercase tracking-tighter">Reglas de Puntuación</h2>
+              <p className="text-gray-400 font-medium">¿Cómo quieres que se ganen los puntos?</p>
+            </div>
+
+            <div className="grid grid-cols-1 gap-3 w-full">
+              {(Object.entries(SCORING_DESCRIPTIONS) as [ScoringMode, any][]).map(([mode, data]) => {
+                const Icon = data.icon;
+                return (
+                  <button 
+                    key={mode}
+                    onClick={() => game.selectScoring(mode)}
+                    className="group p-4 bg-white/5 border border-white/10 rounded-2xl transition-all hover:bg-white/10 hover:border-white/20 flex items-center gap-5"
+                  >
+                    <div className={`p-3 rounded-xl bg-white/5 ${data.color}`}>
+                      <Icon className="w-8 h-8" />
+                    </div>
+                    <div className="text-left">
+                      <h3 className="text-xl font-bold text-white">{data.title}</h3>
+                      <p className="text-gray-500 text-xs">{data.desc}</p>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+
+            <button onClick={() => game.startGameSetup()} className="text-gray-500 font-bold uppercase tracking-widest text-xs hover:text-white transition-colors">
+              Volver
+            </button>
+          </motion.div>
+        )}
+
         {/* SETUP STATE */}
         {game.gameState === 'setup' && (
           <motion.div 
@@ -132,10 +223,31 @@ export default function Home() {
             </div>
 
             <div className="glass-panel p-6 rounded-2xl flex flex-col gap-6 bg-white/5 border-white/10">
+              {game.scoringMode === 'MUERTE' && (
+                <div className="border-b border-white/5 pb-6">
+                  <h3 className="text-sm font-bold text-gray-400 uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
+                    <Heart className="w-4 h-4 text-rose-500" />
+                    HP Inicial
+                  </h3>
+                  <div className="flex items-center gap-4">
+                    <button 
+                      onClick={() => game.scoreManager.setInitialHP(Math.max(1, game.scoreManager.initialHP - 1))}
+                      className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center font-bold text-xl hover:bg-white/10 transition-colors"
+                    >-</button>
+                    <span className="text-3xl font-black text-white w-12 text-center">{game.scoreManager.initialHP}</span>
+                    <button 
+                      onClick={() => game.scoreManager.setInitialHP(Math.min(10, game.scoreManager.initialHP + 1))}
+                      className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center font-bold text-xl hover:bg-white/10 transition-colors"
+                    >+</button>
+                    <span className="text-gray-500 text-xs italic">Vidas por jugador</span>
+                  </div>
+                </div>
+              )}
+
               <div>
                 <h3 className="text-sm font-bold text-gray-400 uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
                   <LayoutGrid className="w-4 h-4" />
-                  Categorías {game.gameMode === 'WORDS' ? 'de Palabras' : 'de Imágenes'}
+                  Categorías
                 </h3>
                 <div className="flex flex-wrap gap-3">
                   {game.gameMode === 'WORDS' ? (
@@ -203,14 +315,16 @@ export default function Home() {
 
             <div className="flex gap-4">
               <button 
-                onClick={() => game.selectMode(game.gameMode)} // Reset to mode select implicitly by changing state
+                onClick={() => game.selectMode(game.gameMode)} 
                 className="py-4 px-6 bg-white/5 border border-white/10 rounded-2xl text-gray-400 hover:text-white transition-colors"
-                onClickCapture={() => game.startGameSetup()}
               >
                 Volver
               </button>
               <button 
-                onClick={game.startRound}
+                onClick={() => {
+                  game.scoreManager.initPlayers(game.scoreManager.initialHP);
+                  game.startRound();
+                }}
                 disabled={game.categories.length === 0 || game.isLoading}
                 className="flex-1 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl font-black text-lg disabled:opacity-50 hover:shadow-[0_0_30px_rgba(59,130,246,0.4)] transition-all flex justify-center uppercase tracking-widest"
               >
@@ -288,11 +402,49 @@ export default function Home() {
             <GameCard secret={game.currentSecret} />
 
             <button 
-              onClick={game.revealResult}
-              className="w-full py-5 mt-4 bg-rose-600/10 border border-rose-500/30 hover:bg-rose-600/20 text-rose-100 rounded-2xl font-black text-lg transition-all uppercase tracking-widest"
+              onClick={game.goToVoting}
+              className="w-full py-5 mt-4 bg-indigo-600/20 border border-indigo-500/30 hover:bg-indigo-600/30 text-indigo-100 rounded-2xl font-black text-lg transition-all uppercase tracking-widest"
             >
-              Revelar Mentiroso
+              Terminar Discusión
             </button>
+          </motion.div>
+        )}
+
+        {/* VOTING STATE */}
+        {game.gameState === 'voting' && (
+          <motion.div 
+            key="voting"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="flex flex-col items-center w-full max-w-md gap-8 z-10"
+          >
+            <div className="text-center space-y-2">
+              <h2 className="text-4xl font-black text-white uppercase tracking-tighter italic">Votación Final</h2>
+              <p className="text-gray-400 font-bold uppercase tracking-widest text-xs px-8 py-2 bg-white/5 rounded-full border border-white/10">
+                Adivino, elige quién crees que es el MENTIROSO
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 w-full">
+              {game.roles.map((r, i) => (
+                <button
+                  key={i}
+                  onClick={() => game.submitVote(r.player === 'Jugador 2' ? '2' : '3')}
+                  className="group relative p-8 bg-white/5 border-2 border-white/10 rounded-3xl transition-all hover:bg-white/10 hover:border-blue-500/50 hover:scale-[1.02] flex items-center gap-6 overflow-hidden"
+                >
+                   <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                      <Target className="w-20 h-20 rotate-12" />
+                   </div>
+                   <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center font-black text-3xl text-gray-300 group-hover:text-blue-400 transition-colors">
+                      {r.player === 'Jugador 2' ? '2' : '3'}
+                   </div>
+                   <div className="text-left relative z-10">
+                      <h3 className="text-3xl font-black text-white uppercase tracking-tighter">{r.player}</h3>
+                      <p className="text-gray-500 font-bold text-xs uppercase tracking-widest">Señalar como Mentiroso</p>
+                   </div>
+                </button>
+              ))}
+            </div>
           </motion.div>
         )}
 
@@ -304,7 +456,7 @@ export default function Home() {
             animate={{ opacity: 1, scale: 1 }}
             className="flex flex-col items-center w-full max-w-md gap-6 z-10"
           >
-            <h2 className="text-5xl font-black text-white mb-4 tracking-tighter uppercase">¡Tiempo!</h2>
+            <h2 className="text-5xl font-black text-white mb-4 tracking-tighter uppercase italic">La Verdad</h2>
 
             <div className="w-full flex flex-col gap-4">
               {game.roles.map((r, i) => (
@@ -334,7 +486,12 @@ export default function Home() {
               ))}
             </div>
 
-            <div className="flex w-full gap-4 mt-8">
+            <div className="mt-4 w-full">
+               <h3 className="text-center text-xs font-black text-gray-500 uppercase tracking-[0.4em] mb-4">Marcador de Partida</h3>
+               <Scoreboard players={game.scoreManager.players} scoringMode={game.scoringMode} compact />
+            </div>
+
+            <div className="flex w-full gap-4 mt-4">
               <button 
                 onClick={game.resetGame}
                 className="flex-1 py-5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl font-black text-lg transition-all flex items-center justify-center gap-2 uppercase tracking-widest text-gray-400"
@@ -350,6 +507,31 @@ export default function Home() {
                 Siguiente
               </button>
             </div>
+          </motion.div>
+        )}
+
+        {/* GAME OVER STATE */}
+        {game.gameState === 'game_over' && (
+          <motion.div 
+            key="game_over"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="flex flex-col items-center w-full max-w-md gap-8 z-10"
+          >
+             <div className="text-center space-y-4">
+                <Skull className="w-24 h-24 text-rose-500 mx-auto animate-bounce" />
+                <h2 className="text-6xl font-black text-white tracking-tighter uppercase italic">PARTIDA TERMINADA</h2>
+                <p className="text-gray-400 font-bold uppercase tracking-widest text-sm">Un jugador ha sido eliminado</p>
+             </div>
+
+             <Scoreboard players={game.scoreManager.players} scoringMode={game.scoringMode} />
+
+             <button 
+                onClick={game.resetGame}
+                className="w-full py-6 bg-white text-black rounded-3xl font-black text-xl hover:scale-[1.02] transition-transform shadow-[0_0_30px_rgba(255,255,255,0.2)] uppercase tracking-widest"
+              >
+                Volver al menú
+              </button>
           </motion.div>
         )}
 
