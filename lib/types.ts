@@ -1,10 +1,20 @@
-import { Category, GameImage } from './imageLoader';
+import { GameImage } from './imageLoader';
 
 export type GameMode = 'WORDS' | 'IMAGES';
 
-export type GameState = 'home' | 'mode_select' | 'setup' | 'assignment' | 'playing' | 'result';
+export type ScoringMode = 'ORIGINAL' | 'MANSALVA' | 'MUERTE';
+
+export type GameState = 'home' | 'mode_select' | 'scoring_select' | 'setup' | 'assignment' | 'playing' | 'voting' | 'result' | 'game_over';
 
 export type Role = 'Confidente' | 'Mentiroso';
+
+export interface Player {
+  id: string;
+  name: string;
+  score: number;
+  hp: number;
+  isEliminated: boolean;
+}
 
 export interface PlayerRole {
   player: string;
