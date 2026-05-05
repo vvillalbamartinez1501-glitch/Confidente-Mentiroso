@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, BookOpen, UserCheck, Ghost, Swords, Zap, Target, HelpCircle } from 'lucide-react';
+import { X, BookOpen, UserCheck, LayoutGrid, Ghost, Swords, Zap, Target, HelpCircle } from 'lucide-react';
 
 interface InstructionsModalProps {
   isOpen: boolean;
