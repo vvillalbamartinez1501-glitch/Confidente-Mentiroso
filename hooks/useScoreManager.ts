@@ -1,113 +1,88 @@
-import { useState, useEffect } from 'react';
-import { Player, ScoringMode, Role } from '../lib/types';
+'use client';
 
-const STORAGE_KEY = 'confidente_mentiroso_scores';
+import { Player, ScoringMode } from '../lib/types';
 
-export function useScoreManager() {
-  const [players, setPlayers] = useState<Player[]>([
-    { id: '1', name: 'Adivino', score: 0, hp: 5, isEliminated: false },
-    { id: '2', name: 'Jugador 2', score: 0, hp: 5, isEliminated: false },
-    { id: '3', name: 'Jugador 3', score: 0, hp: 5, isEliminated: false },
-  ]);
-
-  const [initialHP, setInitialHP] = useState<number>(5);
-
-  // Load from localStorage
-  useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      try {
-        setPlayers(JSON.parse(saved));
-      } catch (e) {
-        console.error("Failed to load scores", e);
-      }
-    }
-  }, []);
-
-  // Save to localStorage
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(players));
-  }, [players]);
-
-  const initPlayers = (hp: number) => {
-    setInitialHP(hp);
-    setPlayers(prev => prev.map(p => ({
-      ...p,
-      score: 0,
-      hp: hp,
-      isEliminated: false
-    })));
-  };
-
-  const updateScores = (
-    scoringMode: ScoringMode, 
-    votedPlayerId: string, 
-    roles: { player: string, role: Role }[]
-  ) => {
-    setPlayers(prev => {
-      const next = [...prev];
-      
-      const adivinoRole = roles.find(r => r.role === 'Adivino')!;
-      const mentirosoRole = roles.find(r => r.role === 'Mentiroso')!;
-      const confidenteRole = roles.find(r => r.role === 'Confidente')!;
-
-      // Find players in our state by name (matching roles)
-      const diviner = next.find(p => p.name === adivinoRole.player)!;
-      const liar = next.find(p => p.name === mentirosoRole.player)!;
-      const confidant = next.find(p => p.name === confidenteRole.player)!;
-
-      const votedPlayer = next.find(p => p.id === votedPlayerId)!;
-      const isCorrect = votedPlayer.name === liar.name;
-
-      if (scoringMode === 'ORIGINAL') {
-        if (!isCorrect) {
-          // Mentiroso engañó al adivino
-          liar.score += 1; 
-        } else {
-          // Adivino acertó
-          diviner.score += 1;
-        }
-      } else if (scoringMode === 'MANSALVA') {
-        // +1 a quien el adivino elija como "dueño de la verdad"
-        votedPlayer.score += 1;
-      } else if (scoringMode === 'MUERTE') {
-        if (!isCorrect) {
-          // Mentiroso engañó -> Adivino y Confidente pierden 1 HP
-          diviner.hp -= 1;
-          confidant.hp -= 1;
-        } else {
-          // Adivino acertó -> Mentiroso pierde 1 HP
-          liar.hp -= 1;
-        }
-        
-        // Update elimination status
-        next.forEach(p => {
-          if (p.hp <= 0) {
-            p.hp = 0;
-            p.isEliminated = true;
-          }
-        });
-      }
-
-      return next;
-    });
-  };
+export function useScoreManager(
+  players: Player[], 
+  onPlayersChange: (players: Player[]) => void,
+  initialHP: number
+) {
 
   const updatePlayerName = (id: string, name: string) => {
-    setPlayers(prev => prev.map(p => p.id === id ? { ...p, name } : p));
+    const newPlayers = players.map(p => p.id === id ? { ...p, name } : p);
+    onPlayersChange(newPlayers);
   };
 
-  const resetScores = () => {
-    initPlayers(initialHP);
+  const adjustScore = (id: string, delta: number) => {
+    const newPlayers = players.map(p => p.id === id ? { ...p, score: Math.max(0, p.score + delta) } : p);
+    onPlayersChange(newPlayers);
+  };
+
+  const adjustHP = (id: string, delta: number) => {
+    const newPlayers = players.map(p => {
+      if (p.id !== id) return p;
+      const newHP = Math.max(0, Math.min(10, p.hp + delta));
+      return { ...p, hp: newHP, isEliminated: newHP === 0 };
+    });
+    onPlayersChange(newPlayers);
+  };
+
+  const updateScoresAfterRound = (liarId: string, divinerChoiceId: string, mode: ScoringMode) => {
+    const next = players.map(p => ({ ...p }));
+    const diviner = next.find(p => p.id === '1' || p.role === 'Adivino'); 
+    // Note: ID '1' was used previously for Adivino. With session rotation, we need a better way.
+    // I'll assume for now that ID '1' is the Adivino for the UI logic, but I'll fix this in useGameLogic.
+    
+    // Actually, I'll pass the Adivino ID too.
+  };
+
+  // I'll make updateScores more explicit by passing IDs
+  const applyRoundResults = (divinerId: string, liarId: string, chosenId: string, mode: ScoringMode) => {
+    const next = players.map(p => ({ ...p }));
+    const diviner = next.find(p => p.id === divinerId)!;
+    const chosen = next.find(p => p.id === chosenId)!;
+    const liar = next.find(p => p.id === liarId)!;
+
+    const isCorrect = liarId === chosenId;
+
+    if (mode === 'ORIGINAL') {
+      if (!isCorrect) {
+        liar.score += 1; 
+      } else {
+        diviner.score += 1;
+      }
+    } else if (mode === 'MANSALVA') {
+      chosen.score += 1;
+    } else if (mode === 'MUERTE') {
+      if (!isCorrect) {
+        diviner.hp -= 1;
+        // Find a confidant (anyone who isn't diviner or liar)
+        const confidant = next.find(p => p.id !== divinerId && p.id !== liarId && !p.isEliminated);
+        if (confidant) confidant.hp -= 1;
+      } else {
+        liar.hp -= 1;
+      }
+      
+      next.forEach(p => {
+        if (p.hp <= 0) {
+          p.hp = 0;
+          p.isEliminated = true;
+        }
+      });
+    }
+    onPlayersChange(next);
+  };
+
+  const resetPlayersStats = (hp: number) => {
+    const newPlayers = players.map(p => ({ ...p, score: 0, hp, isEliminated: false }));
+    onPlayersChange(newPlayers);
   };
 
   return {
-    players,
-    initialHP,
-    setInitialHP,
-    initPlayers,
-    updateScores,
     updatePlayerName,
-    resetScores
+    adjustScore,
+    adjustHP,
+    applyRoundResults,
+    resetPlayersStats
   };
 }

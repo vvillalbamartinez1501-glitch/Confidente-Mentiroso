@@ -1,12 +1,21 @@
-import { GameImage } from './imageLoader';
-
 export type GameMode = 'WORDS' | 'IMAGES';
 
 export type ScoringMode = 'ORIGINAL' | 'MANSALVA' | 'MUERTE';
 
-export type GameState = 'home' | 'mode_select' | 'scoring_select' | 'setup' | 'assignment' | 'playing' | 'voting' | 'result' | 'game_over';
+export type GameState = 
+  | 'home' 
+  | 'session_select'
+  | 'group_manage'
+  | 'mode_select' 
+  | 'scoring_select' 
+  | 'setup' 
+  | 'assignment' 
+  | 'playing' 
+  | 'voting' 
+  | 'result' 
+  | 'game_over';
 
-export type Role = 'Confidente' | 'Mentiroso' | 'Adivino';
+export type Role = 'Adivino' | 'Confidente' | 'Mentiroso' | 'Espectador';
 
 export interface Player {
   id: string;
@@ -18,14 +27,21 @@ export interface Player {
 
 export interface PlayerRole {
   player: string;
+  playerId: string;
   role: Role;
 }
 
-export type GameSecret = {
-  type: 'text';
-  content: string;
-  category: string;
-} | {
-  type: 'image';
-  content: GameImage;
-};
+export interface Session {
+  id: string;
+  name: string;
+  createdAt: string;
+  lastPlayed: string;
+  players: Player[];
+  scoringMode: ScoringMode;
+}
+
+export interface GameSecret {
+  type: 'text' | 'image';
+  content: string | any;
+  category?: string;
+}
