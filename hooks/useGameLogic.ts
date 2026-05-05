@@ -1,26 +1,28 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Category, GameImage, ImageEngine } from '../lib/imageLoader';
-
-export type GameState = 'home' | 'setup' | 'assignment' | 'playing' | 'result';
-export type Role = 'Confidente' | 'Mentiroso';
-
-interface PlayerRole {
-  player: string;
-  role: Role;
-}
+import { Category as ImageCategory } from '../lib/imageLoader';
+import { GameMode, GameState, PlayerRole, GameSecret } from '../lib/types';
+import { ContentManager } from '../lib/contentManager';
+import { WORD_CATEGORIES, WordCategory } from '../constants/words';
 
 export function useGameLogic() {
   const [gameState, setGameState] = useState<GameState>('home');
-  const [categories, setCategories] = useState<Category[]>(['flags', 'memes', 'movies', 'objects', 'geek']);
+  const [gameMode, setGameMode] = useState<GameMode>('IMAGES');
+  const [categories, setCategories] = useState<string[]>([]);
   const [roundTime, setRoundTime] = useState<number>(60); // seconds
   const [timeLeft, setTimeLeft] = useState<number>(0);
   const [roles, setRoles] = useState<PlayerRole[]>([]);
-  const [currentImage, setCurrentImage] = useState<GameImage | null>(null);
+  const [currentSecret, setCurrentSecret] = useState<GameSecret | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const startGameSetup = () => setGameState('setup');
+  const startGameSetup = () => setGameState('mode_select');
 
-  const toggleCategory = (cat: Category) => {
+  const selectMode = (mode: GameMode) => {
+    setGameMode(mode);
+    setCategories([]); // Reset categories when mode changes
+    setGameState('setup');
+  };
+
+  const toggleCategory = (cat: string) => {
     setCategories(prev => 
       prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]
     );
@@ -36,10 +38,14 @@ export function useGameLogic() {
       { player: 'Jugador 3', role: isPlayer2Truth ? 'Mentiroso' : 'Confidente' },
     ]);
 
-    // Load Image
-    const activeCategories = categories.length > 0 ? categories : ['objects'];
-    const img = await ImageEngine.getRandomImage(activeCategories as Category[]);
-    setCurrentImage(img);
+    // Load Secret
+    try {
+      const activeCategories = categories.length > 0 ? categories : (gameMode === 'WORDS' ? ['OBJETOS'] : ['objects']);
+      const secret = await ContentManager.getRandomSecret(gameMode, activeCategories);
+      setCurrentSecret(secret);
+    } catch (error) {
+      console.error("Error loading secret:", error);
+    }
     
     setIsLoading(false);
     setGameState('assignment');
@@ -68,13 +74,15 @@ export function useGameLogic() {
 
   return {
     gameState,
+    gameMode,
     categories,
     roundTime,
     timeLeft,
     roles,
-    currentImage,
+    currentSecret,
     isLoading,
     startGameSetup,
+    selectMode,
     toggleCategory,
     setRoundTime,
     startRound,
