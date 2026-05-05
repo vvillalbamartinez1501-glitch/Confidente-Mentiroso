@@ -130,6 +130,7 @@ export function useGameLogic() {
 
   return {
     gameState,
+    setGameState,
     gameMode,
     categories,
     roundTime,
