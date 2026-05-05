@@ -5,7 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Play, Settings, Info, Clock, Check, X, RotateCcw, 
   EyeOff, ShieldCheck, AlertTriangle, Image as ImageIcon, 
-  Type, LayoutGrid, Trophy, Heart, Skull, Zap, Target, Swords 
+  Type, LayoutGrid, Trophy, Heart, Skull, Zap, Target, Swords,
+  UserCheck, Users // <--- Asegúrate de que estos dos estén aquí
 } from 'lucide-react';
 import { useGameLogic } from '../hooks/useGameLogic';
 import { GameCard } from '../components/GameCard';
