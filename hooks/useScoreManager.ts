@@ -47,22 +47,22 @@ export function useScoreManager() {
     setPlayers(prev => {
       const next = [...prev];
       
-      // Map roles to player IDs (assuming 'Jugador 2' is ID '2' and 'Jugador 3' is ID '3')
-      const player2Role = roles.find(r => r.player === 'Jugador 2')?.role;
-      const player3Role = roles.find(r => r.player === 'Jugador 3')?.role;
-      
-      const diviner = next.find(p => p.id === '1')!;
-      const p2 = next.find(p => p.id === '2')!;
-      const p3 = next.find(p => p.id === '3')!;
+      const adivinoRole = roles.find(r => r.role === 'Adivino')!;
+      const mentirosoRole = roles.find(r => r.role === 'Mentiroso')!;
+      const confidenteRole = roles.find(r => r.role === 'Confidente')!;
+
+      // Find players in our state by name (matching roles)
+      const diviner = next.find(p => p.name === adivinoRole.player)!;
+      const liar = next.find(p => p.name === mentirosoRole.player)!;
+      const confidant = next.find(p => p.name === confidenteRole.player)!;
 
       const votedPlayer = next.find(p => p.id === votedPlayerId)!;
-      const isCorrect = (votedPlayerId === '2' && player2Role === 'Mentiroso') || 
-                        (votedPlayerId === '3' && player3Role === 'Mentiroso');
+      const isCorrect = votedPlayer.name === liar.name;
 
       if (scoringMode === 'ORIGINAL') {
         if (!isCorrect) {
           // Mentiroso engañó al adivino
-          votedPlayer.score += 1; 
+          liar.score += 1; 
         } else {
           // Adivino acertó
           diviner.score += 1;
@@ -72,14 +72,12 @@ export function useScoreManager() {
         votedPlayer.score += 1;
       } else if (scoringMode === 'MUERTE') {
         if (!isCorrect) {
-          // Mentiroso engañó -> Adivino y el otro jugador (el Confidente) pierden 1 HP
+          // Mentiroso engañó -> Adivino y Confidente pierden 1 HP
           diviner.hp -= 1;
-          const confidantId = votedPlayerId === '2' ? '3' : '2';
-          const confidant = next.find(p => p.id === confidantId)!;
           confidant.hp -= 1;
         } else {
           // Adivino acertó -> Mentiroso pierde 1 HP
-          votedPlayer.hp -= 1;
+          liar.hp -= 1;
         }
         
         // Update elimination status
@@ -95,6 +93,10 @@ export function useScoreManager() {
     });
   };
 
+  const updatePlayerName = (id: string, name: string) => {
+    setPlayers(prev => prev.map(p => p.id === id ? { ...p, name } : p));
+  };
+
   const resetScores = () => {
     initPlayers(initialHP);
   };
@@ -105,6 +107,7 @@ export function useScoreManager() {
     setInitialHP,
     initPlayers,
     updateScores,
+    updatePlayerName,
     resetScores
   };
 }

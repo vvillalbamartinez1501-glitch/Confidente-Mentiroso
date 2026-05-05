@@ -6,7 +6,7 @@ export type ScoringMode = 'ORIGINAL' | 'MANSALVA' | 'MUERTE';
 
 export type GameState = 'home' | 'mode_select' | 'scoring_select' | 'setup' | 'assignment' | 'playing' | 'voting' | 'result' | 'game_over';
 
-export type Role = 'Confidente' | 'Mentiroso';
+export type Role = 'Confidente' | 'Mentiroso' | 'Adivino';
 
 export interface Player {
   id: string;

@@ -39,12 +39,22 @@ export function useGameLogic() {
   const startRound = async () => {
     setIsLoading(true);
     
-    // Assign roles randomly
-    const isPlayer2Truth = Math.random() > 0.5;
-    setRoles([
-      { player: 'Jugador 2', role: isPlayer2Truth ? 'Confidente' : 'Mentiroso' },
-      { player: 'Jugador 3', role: isPlayer2Truth ? 'Mentiroso' : 'Confidente' },
-    ]);
+    // Assign roles randomly to all 3 players
+    const playersList = [...scoreManager.players];
+    const shuffled = [...playersList].sort(() => Math.random() - 0.5);
+    
+    const newRoles: PlayerRole[] = [
+      { player: shuffled[0].name, role: 'Adivino' },
+      { player: shuffled[1].name, role: 'Confidente' },
+      { player: shuffled[2].name, role: 'Mentiroso' },
+    ];
+    
+    // Maintain a consistent order (by original player index) for the UI if needed
+    // or just use the shuffled list. Let's sort them back to original player order.
+    setRoles(playersList.map(p => ({
+      player: p.name,
+      role: newRoles.find(nr => nr.player === p.name)!.role
+    })));
 
     // Load Secret
     try {

@@ -222,7 +222,31 @@ export default function Home() {
               </h2>
             </div>
 
-            <div className="glass-panel p-6 rounded-2xl flex flex-col gap-6 bg-white/5 border-white/10">
+            <div className="glass-panel p-6 rounded-2xl flex flex-col gap-6 bg-white/5 border-white/10 max-h-[70vh] overflow-y-auto">
+              {/* Player Names Section */}
+              <div className="border-b border-white/5 pb-6">
+                <h3 className="text-sm font-bold text-gray-400 uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
+                  <UserCheck className="w-4 h-4 text-emerald-400" />
+                  Jugadores
+                </h3>
+                <div className="space-y-3">
+                  {game.scoreManager.players.map((p, i) => (
+                    <div key={p.id} className="relative group">
+                      <input 
+                        type="text"
+                        value={p.name}
+                        onChange={(e) => game.scoreManager.updatePlayerName(p.id, e.target.value)}
+                        placeholder={`Jugador ${i + 1}`}
+                        className="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-white font-bold focus:border-blue-500 outline-none transition-colors"
+                      />
+                      <div className="absolute right-4 top-1/2 -translate-y-1/2 opacity-20 group-focus-within:opacity-100 transition-opacity">
+                         <Type className="w-4 h-4" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               {game.scoringMode === 'MUERTE' && (
                 <div className="border-b border-white/5 pb-6">
                   <h3 className="text-sm font-bold text-gray-400 uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
@@ -315,7 +339,7 @@ export default function Home() {
 
             <div className="flex gap-4">
               <button 
-                onClick={() => game.selectMode(game.gameMode)} 
+                onClick={() => game.startGameSetup()} 
                 className="py-4 px-6 bg-white/5 border border-white/10 rounded-2xl text-gray-400 hover:text-white transition-colors"
               >
                 Volver
@@ -325,7 +349,7 @@ export default function Home() {
                   game.scoreManager.initPlayers(game.scoreManager.initialHP);
                   game.startRound();
                 }}
-                disabled={game.categories.length === 0 || game.isLoading}
+                disabled={game.categories.length === 0 || game.isLoading || game.scoreManager.players.some(p => !p.name)}
                 className="flex-1 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl font-black text-lg disabled:opacity-50 hover:shadow-[0_0_30px_rgba(59,130,246,0.4)] transition-all flex justify-center uppercase tracking-widest"
               >
                 {game.isLoading ? 'Preparando...' : '¡A Jugar!'}
@@ -357,10 +381,12 @@ export default function Home() {
                 {game.roles.map((r, i) => (
                   <div key={i} className="flex justify-between items-center bg-black/40 p-5 rounded-2xl border border-white/5">
                     <span className="font-black text-white text-lg tracking-tight uppercase">{r.player}</span>
-                    <span className={`font-black text-xs px-4 py-2 rounded-full tracking-widest uppercase shadow-xl ${
+                    <span className={`font-black text-[10px] px-3 py-1.5 rounded-full tracking-widest uppercase shadow-xl ${
                       r.role === 'Confidente' 
                         ? 'text-emerald-400 bg-emerald-500/10 border border-emerald-500/30' 
-                        : 'text-rose-400 bg-rose-500/10 border border-rose-500/30'
+                        : r.role === 'Mentiroso'
+                        ? 'text-rose-400 bg-rose-500/10 border border-rose-500/30'
+                        : 'text-blue-400 bg-blue-500/10 border border-blue-500/30'
                     }`}>
                       {r.role}
                     </span>
@@ -418,25 +444,31 @@ export default function Home() {
             animate={{ opacity: 1, scale: 1 }}
             className="flex flex-col items-center w-full max-w-md gap-8 z-10"
           >
-            <div className="text-center space-y-2">
+            <div className="text-center space-y-3">
               <h2 className="text-4xl font-black text-white uppercase tracking-tighter italic">Votación Final</h2>
-              <p className="text-gray-400 font-bold uppercase tracking-widest text-xs px-8 py-2 bg-white/5 rounded-full border border-white/10">
-                Adivino, elige quién crees que es el MENTIROSO
+              <div className="flex flex-col items-center gap-1">
+                 <p className="text-blue-400 font-black uppercase tracking-[0.2em] text-[10px]">Turno de:</p>
+                 <div className="px-6 py-2 bg-blue-500/20 border border-blue-500/40 rounded-full text-white font-black uppercase text-xl">
+                    {game.roles.find(r => r.role === 'Adivino')?.player}
+                 </div>
+              </div>
+              <p className="text-gray-500 font-bold uppercase tracking-widest text-[10px] pt-4">
+                ¿Quién crees que es el MENTIROSO?
               </p>
             </div>
 
             <div className="grid grid-cols-1 gap-4 w-full">
-              {game.roles.map((r, i) => (
+              {game.roles.filter(r => r.role !== 'Adivino').map((r, i) => (
                 <button
                   key={i}
-                  onClick={() => game.submitVote(r.player === 'Jugador 2' ? '2' : '3')}
+                  onClick={() => game.submitVote(game.scoreManager.players.find(p => p.name === r.player)!.id)}
                   className="group relative p-8 bg-white/5 border-2 border-white/10 rounded-3xl transition-all hover:bg-white/10 hover:border-blue-500/50 hover:scale-[1.02] flex items-center gap-6 overflow-hidden"
                 >
                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                       <Target className="w-20 h-20 rotate-12" />
                    </div>
-                   <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center font-black text-3xl text-gray-300 group-hover:text-blue-400 transition-colors">
-                      {r.player === 'Jugador 2' ? '2' : '3'}
+                   <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center font-black text-3xl text-gray-300 group-hover:text-blue-400 transition-colors capitalize">
+                      {r.player[0]}
                    </div>
                    <div className="text-left relative z-10">
                       <h3 className="text-3xl font-black text-white uppercase tracking-tighter">{r.player}</h3>
