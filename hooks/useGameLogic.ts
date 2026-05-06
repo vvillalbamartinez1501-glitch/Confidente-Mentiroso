@@ -59,26 +59,35 @@ export function useGameLogic(sessionManager: any) {
       const secret = await getRandomSecret(gameMode, categories);
       setCurrentSecret(secret);
       
-      const players = sessionManager.activeSession.players.filter(p => !p.isEliminated);
-      if (players.length < 3) {
-        alert("Necesitas al menos 3 jugadores vivos.");
+      const allPlayers = sessionManager.activeSession.players;
+      const alivePlayers = allPlayers.filter(p => !p.isEliminated);
+      const activePlayers = alivePlayers.filter(p => !p.isManualSpectator);
+      
+      if (activePlayers.length < 3) {
+        alert("Necesitas al menos 3 jugadores activos (vivos y no marcados como espectadores).");
         setIsLoading(false);
         return;
       }
 
-      // Randomize roles
-      const shuffled = [...players].sort(() => Math.random() - 0.5);
-      const diviner = shuffled[0];
-      const confidant = shuffled[1];
-      const liar = shuffled[2];
-      const others = shuffled.slice(3);
+      // Randomize active players
+      const shuffledActive = [...activePlayers].sort(() => Math.random() - 0.5);
+      const diviner = shuffledActive[0];
+      const confidant = shuffledActive[1];
+      const liar = shuffledActive[2];
 
-      const assignedRoles: PlayerRole[] = [
-        { playerId: diviner.id, player: diviner.name, role: 'Adivino' },
-        { playerId: confidant.id, player: confidant.name, role: 'Confidente' },
-        { playerId: liar.id, player: liar.name, role: 'Mentiroso' },
-        ...others.map(p => ({ playerId: p.id, player: p.name, role: 'Espectador' as Role }))
-      ];
+      const assignedRoles: PlayerRole[] = allPlayers.map(p => {
+        let role: Role = 'Espectador';
+        if (p.id === diviner.id) role = 'Adivino';
+        else if (p.id === confidant.id) role = 'Confidente';
+        else if (p.id === liar.id) role = 'Mentiroso';
+        
+        return {
+          playerId: p.id,
+          player: p.name,
+          role,
+          isManualSpectator: p.isManualSpectator
+        };
+      });
 
       setRoles(assignedRoles);
       setTimeLeft(roundTime);

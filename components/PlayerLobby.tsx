@@ -3,17 +3,18 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Player } from '../lib/types';
-import { UserPlus, Trash2, Edit3, User, Check, X } from 'lucide-react';
+import { UserPlus, Trash2, Edit3, User, Check, X, Eye, EyeOff } from 'lucide-react';
 
 interface PlayerLobbyProps {
   players: Player[];
   onAdd: (name: string) => void;
   onRemove: (id: string) => void;
   onUpdate: (id: string, name: string) => void;
+  onToggleSpectator: (id: string) => void;
   onContinue: () => void;
 }
 
-export function PlayerLobby({ players, onAdd, onRemove, onUpdate, onContinue }: PlayerLobbyProps) {
+export function PlayerLobby({ players, onAdd, onRemove, onUpdate, onToggleSpectator, onContinue }: PlayerLobbyProps) {
   const [newName, setNewName] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [tempName, setTempName] = useState('');
@@ -73,10 +74,16 @@ export function PlayerLobby({ players, onAdd, onRemove, onUpdate, onContinue }: 
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              className="flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-2xl group"
+              className={`flex items-center justify-between p-4 border transition-all duration-300 rounded-2xl group ${
+                player.isManualSpectator 
+                ? 'bg-black/40 border-white/5 opacity-60 scale-[0.98]' 
+                : 'bg-white/5 border-white/10'
+              }`}
             >
               <div className="flex items-center gap-4 flex-1">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center font-black text-white">
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center font-black text-white transition-all ${
+                  player.isManualSpectator ? 'bg-gray-700 grayscale' : 'bg-gradient-to-br from-indigo-500 to-purple-500'
+                }`}>
                   {player.name[0].toUpperCase()}
                 </div>
                 
@@ -90,7 +97,16 @@ export function PlayerLobby({ players, onAdd, onRemove, onUpdate, onContinue }: 
                     className="bg-black/40 border border-purple-500/50 rounded-lg px-3 py-1 text-white font-bold outline-none w-full"
                   />
                 ) : (
-                  <span className="font-bold text-white uppercase tracking-tight text-lg">{player.name}</span>
+                  <div className="flex flex-col">
+                    <span className={`font-bold uppercase tracking-tight text-lg transition-colors ${
+                      player.isManualSpectator ? 'text-gray-500' : 'text-white'
+                    }`}>
+                      {player.name}
+                    </span>
+                    {player.isManualSpectator && (
+                      <span className="text-[9px] font-black text-blue-500/60 uppercase tracking-widest">Espectador Manual</span>
+                    )}
+                  </div>
                 )}
               </div>
 
@@ -101,6 +117,13 @@ export function PlayerLobby({ players, onAdd, onRemove, onUpdate, onContinue }: 
                   </button>
                 ) : (
                   <>
+                    <button 
+                      onClick={() => onToggleSpectator(player.id)} 
+                      className={`p-2 transition-colors ${player.isManualSpectator ? 'text-blue-400' : 'text-gray-500 hover:text-blue-400'}`}
+                      title={player.isManualSpectator ? "Participar" : "Poner como espectador"}
+                    >
+                      {player.isManualSpectator ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    </button>
                     <button onClick={() => startEdit(player)} className="p-2 text-gray-500 hover:text-white transition-colors">
                       <Edit3 className="w-5 h-5" />
                     </button>

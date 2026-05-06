@@ -11,6 +11,7 @@ import { useGlobalContext } from '../../../context/GlobalContext';
 import { getRandomSecret } from '../../../lib/contentManager';
 import { WordCategory } from '../../../constants/words';
 import Link from 'next/link';
+import { InstructionsModal } from '../../../components/InstructionsModal';
 
 export default function ImpostorPage() {
   const sessionManager = useGlobalContext();

@@ -23,12 +23,14 @@ export interface Player {
   score: number;
   hp: number;
   isEliminated: boolean;
+  isManualSpectator?: boolean; // New property
 }
 
 export interface PlayerRole {
   player: string;
   playerId: string;
   role: Role;
+  isManualSpectator?: boolean;
 }
 
 export interface Session {

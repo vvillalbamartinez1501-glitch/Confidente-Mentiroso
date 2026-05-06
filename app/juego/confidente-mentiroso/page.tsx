@@ -68,7 +68,8 @@ export default function ConfidenteMentirosoPage() {
       name,
       score: 0,
       hp: 5,
-      isEliminated: false
+      isEliminated: false,
+      isManualSpectator: false
     };
     sessionManager.updateActiveSessionPlayers([...(sessionManager.activeSession?.players || []), newPlayer]);
   };
@@ -82,6 +83,14 @@ export default function ConfidenteMentirosoPage() {
   const handleUpdatePlayer = (id: string, name: string) => {
     sessionManager.updateActiveSessionPlayers(
       (sessionManager.activeSession?.players || []).map(p => p.id === id ? { ...p, name } : p)
+    );
+  };
+
+  const handleToggleSpectator = (id: string) => {
+    sessionManager.updateActiveSessionPlayers(
+      (sessionManager.activeSession?.players || []).map(p => 
+        p.id === id ? { ...p, isManualSpectator: !p.isManualSpectator } : p
+      )
     );
   };
 
@@ -213,6 +222,7 @@ export default function ConfidenteMentirosoPage() {
               onAdd={handleAddPlayer}
               onRemove={handleRemovePlayer}
               onUpdate={handleUpdatePlayer}
+              onToggleSpectator={handleToggleSpectator}
               onContinue={() => game.setGameState('scoring_select')}
             />
             <button onClick={() => game.setGameState('session_select')} className="mt-6 w-full text-gray-500 font-bold uppercase tracking-widest text-[10px] hover:text-white transition-colors">
@@ -477,7 +487,8 @@ export default function ConfidenteMentirosoPage() {
                   </div>
 
                   <div className="glass-panel p-5 sm:p-6 rounded-3xl w-full flex flex-col gap-4 bg-white/5 border-white/10">
-                    {game.roles.filter(r => r.role !== 'Adivino').map((r, i) => (
+                    {/* Informants */}
+                    {game.roles.filter(r => r.role !== 'Adivino' && !r.isManualSpectator).map((r, i) => (
                       <motion.div 
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -496,6 +507,21 @@ export default function ConfidenteMentirosoPage() {
                         </span>
                       </motion.div>
                     ))}
+
+                    {/* Manual Spectators Section */}
+                    {game.roles.some(r => r.isManualSpectator) && (
+                      <div className="pt-4 mt-2 border-t border-white/5">
+                        <p className="text-[9px] font-black text-gray-500 uppercase tracking-[0.2em] mb-3 text-center">Espectadores de la Sesión</p>
+                        <div className="flex flex-wrap justify-center gap-2">
+                          {game.roles.filter(r => r.isManualSpectator).map((r, i) => (
+                            <div key={i} className="px-3 py-1.5 bg-white/5 border border-white/5 rounded-full flex items-center gap-2">
+                              <EyeOff className="w-3 h-3 text-blue-400" />
+                              <span className="text-[10px] font-bold text-gray-400 uppercase">{r.player}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   <button 

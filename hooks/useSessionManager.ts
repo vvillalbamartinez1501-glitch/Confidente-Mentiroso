@@ -35,9 +35,9 @@ export function useSessionManager() {
       createdAt: new Date().toISOString(),
       lastPlayed: new Date().toISOString(),
       players: [
-        { id: crypto.randomUUID(), name: 'Adivino', score: 0, hp: 5, isEliminated: false },
-        { id: crypto.randomUUID(), name: 'Jugador 2', score: 0, hp: 5, isEliminated: false },
-        { id: crypto.randomUUID(), name: 'Jugador 3', score: 0, hp: 5, isEliminated: false },
+        { id: crypto.randomUUID(), name: 'Adivino', score: 0, hp: 5, isEliminated: false, isManualSpectator: false },
+        { id: crypto.randomUUID(), name: 'Jugador 2', score: 0, hp: 5, isEliminated: false, isManualSpectator: false },
+        { id: crypto.randomUUID(), name: 'Jugador 3', score: 0, hp: 5, isEliminated: false, isManualSpectator: false },
       ],
       scoringMode: 'ORIGINAL'
     };
