@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Player } from '../lib/types';
-import { UserPlus, Trash2, Edit3, User, Check, X, Eye, EyeOff } from 'lucide-react';
+import { UserPlus, Trash2, Edit3, User, Check, X, Eye, EyeOff, ArrowUp, ArrowDown } from 'lucide-react';
 
 interface PlayerLobbyProps {
   players: Player[];
@@ -11,10 +11,11 @@ interface PlayerLobbyProps {
   onRemove: (id: string) => void;
   onUpdate: (id: string, name: string) => void;
   onToggleSpectator: (id: string) => void;
+  onReorder: (index: number, direction: 'up' | 'down') => void;
   onContinue: () => void;
 }
 
-export function PlayerLobby({ players, onAdd, onRemove, onUpdate, onToggleSpectator, onContinue }: PlayerLobbyProps) {
+export function PlayerLobby({ players, onAdd, onRemove, onUpdate, onToggleSpectator, onReorder, onContinue }: PlayerLobbyProps) {
   const [newName, setNewName] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [tempName, setTempName] = useState('');
@@ -117,6 +118,22 @@ export function PlayerLobby({ players, onAdd, onRemove, onUpdate, onToggleSpecta
                   </button>
                 ) : (
                   <>
+                    <div className="flex flex-col mr-1">
+                      <button 
+                        onClick={() => onReorder(index, 'up')}
+                        disabled={index === 0}
+                        className="p-1 text-gray-600 hover:text-white disabled:opacity-0 transition-colors"
+                      >
+                        <ArrowUp className="w-3.5 h-3.5" />
+                      </button>
+                      <button 
+                        onClick={() => onReorder(index, 'down')}
+                        disabled={index === players.length - 1}
+                        className="p-1 text-gray-600 hover:text-white disabled:opacity-0 transition-colors"
+                      >
+                        <ArrowDown className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                     <button 
                       onClick={() => onToggleSpectator(player.id)} 
                       className={`p-2 transition-colors ${player.isManualSpectator ? 'text-blue-400' : 'text-gray-500 hover:text-blue-400'}`}

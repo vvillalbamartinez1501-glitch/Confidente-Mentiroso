@@ -16,6 +16,7 @@ import { InstructionsModal } from '../../../components/InstructionsModal';
 import { SessionPicker } from '../../../components/SessionPicker';
 import { PlayerLobby } from '../../../components/PlayerLobby';
 import { useGlobalContext } from '../../../context/GlobalContext';
+import { SessionHeader } from '../../../components/SessionHeader';
 import Link from 'next/link';
 
 const IMAGE_CATEGORY_ICONS: Record<string, string> = {
@@ -94,38 +95,20 @@ export default function ConfidenteMentirosoPage() {
     );
   };
 
+  const handleReorder = (index: number, direction: 'up' | 'down') => {
+    const players = [...(sessionManager.activeSession?.players || [])];
+    const newIndex = direction === 'up' ? index - 1 : index + 1;
+    if (newIndex < 0 || newIndex >= players.length) return;
+    
+    const [movedPlayer] = players.splice(index, 1);
+    players.splice(newIndex, 0, movedPlayer);
+    sessionManager.updateActiveSessionPlayers(players);
+  };
+
   return (
     <main className="flex-1 flex flex-col items-center justify-center p-4 sm:p-6 relative overflow-hidden bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-gray-900 via-[#0f111a] to-black min-h-screen">
       
-      {/* Top Bar with Session Info */}
-      <div className="absolute top-0 left-0 right-0 p-4 flex justify-between items-center z-50 bg-black/20 backdrop-blur-md border-b border-white/5">
-        <Link href="/" className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors group">
-          <HomeIcon className="w-5 h-5 group-hover:scale-110 transition-transform" />
-          <span className="text-xs font-bold uppercase tracking-widest hidden sm:block">Hub de Juegos</span>
-        </Link>
-        
-        {sessionManager.activeSession && (
-          <div className="flex items-center gap-4">
-            <div className="text-right hidden sm:block">
-              <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest">Sesión Activa</p>
-              <p className="text-xs font-bold text-blue-400">{sessionManager.activeSession.name}</p>
-            </div>
-            <div className="h-8 w-[1px] bg-white/10 hidden sm:block" />
-            <div className="flex -space-x-2">
-              {sessionManager.activeSession.players.slice(0, 3).map((p, i) => (
-                <div key={p.id} className="w-8 h-8 rounded-full border-2 border-[#0f111a] bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center text-[10px] font-black text-white">
-                  {p.name[0]}
-                </div>
-              ))}
-              {sessionManager.activeSession.players.length > 3 && (
-                <div className="w-8 h-8 rounded-full border-2 border-[#0f111a] bg-gray-800 flex items-center justify-center text-[10px] font-black text-gray-400">
-                  +{sessionManager.activeSession.players.length - 3}
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
+      <SessionHeader gameTitle="Confidente y Mentiroso" />
 
       {/* Background Decor */}
       <div className="absolute top-[-10%] left-[-10%] w-64 sm:w-96 h-64 sm:h-96 bg-purple-600/10 rounded-full blur-[100px] pointer-events-none" />
@@ -223,6 +206,7 @@ export default function ConfidenteMentirosoPage() {
               onRemove={handleRemovePlayer}
               onUpdate={handleUpdatePlayer}
               onToggleSpectator={handleToggleSpectator}
+              onReorder={handleReorder}
               onContinue={() => game.setGameState('scoring_select')}
             />
             <button onClick={() => game.setGameState('session_select')} className="mt-6 w-full text-gray-500 font-bold uppercase tracking-widest text-[10px] hover:text-white transition-colors">
