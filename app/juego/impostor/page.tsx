@@ -16,7 +16,7 @@ import { InstructionsModal } from '../../../components/InstructionsModal';
 export default function ImpostorPage() {
   const sessionManager = useGlobalContext();
   const [gameState, setGameState] = useState<'home' | 'setup' | 'playing' | 'result'>('home');
-  const [category, setCategory] = useState<WordCategory>('random');
+  const [category, setCategory] = useState<WordCategory | 'random'>('random');
   const [secretWord, setSecretWord] = useState('');
   const [roles, setRoles] = useState<{ playerName: string, isImpostor: boolean }[]>([]);
   const [showRole, setShowRole] = useState(false);
@@ -26,7 +26,11 @@ export default function ImpostorPage() {
   const startSetup = () => setGameState('setup');
 
   const startGame = async () => {
-    const secret = await getRandomSecret('WORDS', [category]);
+    const categoriesToUse = category === 'random' 
+      ? (Object.keys(WORD_CATEGORIES) as WordCategory[]) 
+      : [category];
+      
+    const secret = await getRandomSecret('WORDS', categoriesToUse);
     setSecretWord(secret.content);
     
     const players = sessionManager.activeSession?.players || [];
@@ -111,13 +115,13 @@ export default function ImpostorPage() {
                <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-4 block text-center">Selecciona Categoría</label>
                <select 
                 value={category}
-                onChange={(e) => setCategory(e.target.value as WordCategory)}
+                onChange={(e) => setCategory(e.target.value as any)}
                 className="w-full bg-black/40 border border-white/10 p-4 rounded-2xl text-white font-bold"
                >
-                 <option value="random">Cualquier Palabra</option>
-                 <option value="lugares">Lugares</option>
-                 <option value="objetos">Objetos</option>
-                 <option value="personajes">Personajes</option>
+                 <option value="random">Cualquier Categoría</option>
+                 {Object.entries(WORD_CATEGORIES).map(([key, cat]) => (
+                   <option key={key} value={key}>{cat.name}</option>
+                 ))}
                </select>
             </div>
             <button 
