@@ -60,8 +60,8 @@ export function useGameLogic(sessionManager: any) {
       setCurrentSecret(secret);
       
       const allPlayers = sessionManager.activeSession.players;
-      const alivePlayers = allPlayers.filter(p => !p.isEliminated);
-      const activePlayers = alivePlayers.filter(p => !p.isManualSpectator);
+      const alivePlayers = allPlayers.filter((p: Player) => !p.isEliminated);
+      const activePlayers = alivePlayers.filter((p: Player) => !p.isManualSpectator);
       
       if (activePlayers.length < 3) {
         alert("Necesitas al menos 3 jugadores activos (vivos y no marcados como espectadores).");
@@ -75,7 +75,7 @@ export function useGameLogic(sessionManager: any) {
       const confidant = shuffledActive[1];
       const liar = shuffledActive[2];
 
-      const assignedRoles: PlayerRole[] = allPlayers.map(p => {
+      const assignedRoles: PlayerRole[] = allPlayers.map((p: Player) => {
         let role: Role = 'Espectador';
         if (p.id === diviner.id) role = 'Adivino';
         else if (p.id === confidant.id) role = 'Confidente';
