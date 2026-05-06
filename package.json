@@ -16,6 +16,7 @@
     "motion-dom": "^12.38.0",
     "motion-utils": "^12.36.0",
     "next": "^15.0.0",
+    "node-fetch": "^3.3.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwind-merge": "^2.5.4"

@@ -1,0 +1,18 @@
+name: Descarga Automática de Memes
+on:
+  schedule:
+    - cron: '0 0 */3 * *' # Se ejecuta cada 3 días
+  workflow_dispatch: # Permite ejecutarlo manualmente desde la web de GitHub
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Ejecutar Script de IA
+        env:
+          GOOGLE_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
+          NEXT_PUBLIC_UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
+        run: |
+          npm install
+          node scripts/ai-image-downloader.mjs "últimos memes virales 2026"
