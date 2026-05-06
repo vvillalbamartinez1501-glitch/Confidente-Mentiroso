@@ -49,6 +49,14 @@ export default function Home() {
   const game = useGameLogic();
   const [showScoreboard, setShowScoreboard] = useState(false);
   const [isInstructionsOpen, setIsInstructionsOpen] = useState(false);
+  const [showRoles, setShowRoles] = useState(false);
+
+  // Reset showRoles when moving to assignment state
+  React.useEffect(() => {
+    if (game.gameState === 'assignment') {
+      setShowRoles(false);
+    }
+  }, [game.gameState]);
 
   // Helper to handle player additions/removals in lobby
   const handleAddPlayer = (name: string) => {
@@ -380,46 +388,92 @@ export default function Home() {
         {game.gameState === 'assignment' && (
           <motion.div 
             key="assignment"
-            initial={{ opacity: 0, scale: 0.8 }}
+            initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, y: -50 }}
+            exit={{ opacity: 0, scale: 1.1 }}
             className="flex flex-col items-center text-center w-full max-w-md gap-6 z-10 px-2 sm:px-0"
           >
-            <div className="bg-orange-500/10 text-orange-400 border border-orange-500/20 p-4 rounded-2xl flex items-center gap-3 w-full">
-              <div className="p-2 bg-orange-500/20 rounded-full animate-pulse shrink-0">
-                <EyeOff className="w-5 h-5" />
-              </div>
-              <p className="font-bold text-left text-[11px] sm:text-sm uppercase tracking-tight">¡El Adivino NO debe mirar la pantalla!</p>
-            </div>
-
-            <div className="glass-panel p-5 sm:p-6 rounded-2xl w-full flex flex-col gap-5 sm:gap-6 bg-white/5 border-white/10 overflow-y-auto max-h-[50vh] no-scrollbar">
-              <h2 className="text-[11px] font-black text-gray-500 uppercase tracking-[0.3em] border-b border-white/5 pb-4">Roles</h2>
-              
-              <div className="flex flex-col gap-3">
-                {game.roles.map((r, i) => (
-                  <div key={i} className={`flex justify-between items-center p-4 rounded-2xl border ${
-                    r.role === 'Espectador' ? 'bg-black/20 border-white/5 opacity-50' : 'bg-black/40 border-white/10'
-                  }`}>
-                    <span className="font-black text-white text-base sm:text-lg tracking-tight uppercase truncate mr-2">{r.player}</span>
-                    <span className={`font-black text-[9px] sm:text-[10px] px-3 sm:px-4 py-2 rounded-full tracking-widest uppercase shrink-0 ${
-                      r.role === 'Confidente' ? 'text-emerald-400 bg-emerald-500/10 border border-emerald-500/30' : 
-                      r.role === 'Mentiroso' ? 'text-rose-400 bg-rose-500/10 border border-rose-500/30' :
-                      r.role === 'Adivino' ? 'text-blue-400 bg-blue-500/10 border border-blue-500/30' :
-                      'text-gray-500 bg-white/5 border border-white/5'
-                    }`}>
-                      {r.role}
-                    </span>
+            <AnimatePresence mode="wait">
+              {!showRoles ? (
+                <motion.div 
+                  key="step1"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  className="w-full flex flex-col gap-6"
+                >
+                  <div className="bg-blue-500/10 text-blue-400 border border-blue-500/20 p-6 rounded-3xl flex flex-col items-center gap-4 w-full">
+                    <div className="p-4 bg-blue-500/20 rounded-full animate-pulse">
+                      <UserCheck className="w-10 h-10" />
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-black uppercase tracking-tighter mb-2">Identificación del Adivino</h2>
+                      <p className="font-bold text-sm uppercase tracking-tight opacity-80">
+                        {game.roles.find(r => r.role === 'Adivino')?.player}, tú eres el Adivino.
+                      </p>
+                    </div>
                   </div>
-                ))}
-              </div>
-            </div>
 
-            <button 
-              onClick={game.beginPlay}
-              className="w-full py-5 bg-white text-black rounded-2xl font-black text-lg shadow-2xl uppercase tracking-widest"
-            >
-              ¡Entendido!
-            </button>
+                  <div className="glass-panel p-8 rounded-3xl bg-white/5 border-white/10">
+                    <p className="text-gray-300 font-medium leading-relaxed italic">
+                      "Entrega el dispositivo a tus compañeros. <br/> Ellos verán el secreto mientras tú esperas."
+                    </p>
+                  </div>
+
+                  <button 
+                    onClick={() => setShowRoles(true)}
+                    className="group relative w-full py-6 bg-blue-600 rounded-2xl font-black text-xl shadow-[0_0_30px_rgba(37,99,235,0.3)] uppercase tracking-widest text-white overflow-hidden"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                    Adivino Identificado
+                  </button>
+                </motion.div>
+              ) : (
+                <motion.div 
+                  key="step2"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  className="w-full flex flex-col gap-6"
+                >
+                  <div className="bg-orange-500/10 text-orange-400 border border-orange-500/20 p-4 rounded-2xl flex items-center gap-3 w-full">
+                    <div className="p-2 bg-orange-500/20 rounded-full animate-bounce shrink-0">
+                      <ShieldCheck className="w-5 h-5" />
+                    </div>
+                    <p className="font-black text-left text-[11px] sm:text-xs uppercase tracking-tight">¡Solo para Informantes! Memorizad vuestros roles</p>
+                  </div>
+
+                  <div className="glass-panel p-5 sm:p-6 rounded-3xl w-full flex flex-col gap-4 bg-white/5 border-white/10">
+                    {game.roles.filter(r => r.role !== 'Adivino').map((r, i) => (
+                      <motion.div 
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: i * 0.1 }}
+                        key={i} 
+                        className={`flex justify-between items-center p-4 rounded-2xl border ${
+                        r.role === 'Espectador' ? 'bg-black/20 border-white/5 opacity-50' : 'bg-black/40 border-white/10'
+                      }`}>
+                        <span className="font-black text-white text-base sm:text-lg tracking-tight uppercase truncate mr-2">{r.player}</span>
+                        <span className={`font-black text-[9px] sm:text-[10px] px-3 sm:px-4 py-2 rounded-full tracking-widest uppercase shrink-0 ${
+                          r.role === 'Confidente' ? 'text-emerald-400 bg-emerald-500/10 border border-emerald-500/30' : 
+                          r.role === 'Mentiroso' ? 'text-rose-400 bg-rose-500/10 border border-rose-500/30' :
+                          'text-gray-500 bg-white/5 border border-white/5'
+                        }`}>
+                          {r.role}
+                        </span>
+                      </motion.div>
+                    ))}
+                  </div>
+
+                  <button 
+                    onClick={game.beginPlay}
+                    className="w-full py-5 bg-white text-black rounded-2xl font-black text-lg shadow-2xl uppercase tracking-widest hover:scale-[1.02] transition-transform"
+                  >
+                    ¡Empezar Ronda!
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
         )}
 
