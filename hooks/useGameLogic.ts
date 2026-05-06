@@ -6,7 +6,7 @@ import { getRandomSecret } from '../lib/contentManager';
 import { useSessionManager } from './useSessionManager';
 import { useScoreManager } from './useScoreManager';
 
-export function useGameLogic() {
+export function useGameLogic(sessionManager: any) {
   const [gameState, setGameState] = useState<GameState>('home');
   const [gameMode, setGameMode] = useState<GameMode>('WORDS');
   const [categories, setCategories] = useState<string[]>([]);
@@ -17,7 +17,6 @@ export function useGameLogic() {
   const [votedPlayerId, setVotedPlayerId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   
-  const sessionManager = useSessionManager();
   const scoreManager = useScoreManager(
     sessionManager.activeSession?.players || [],
     sessionManager.updateActiveSessionPlayers,

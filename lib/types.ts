@@ -45,3 +45,17 @@ export interface GameSecret {
   content: string | any;
   category?: string;
 }
+
+export interface GameInfo {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  color: string;
+  isNew?: boolean;
+  isBeta?: boolean;
+}
+
+export interface GameModule {
+  onScoreReport: (results: { playerId: string; scoreDelta: number; hpDelta: number }[]) => void;
+}
