@@ -17,6 +17,8 @@ import { SessionPicker } from '../../../components/SessionPicker';
 import { PlayerLobby } from '../../../components/PlayerLobby';
 import { useGlobalContext } from '../../../context/GlobalContext';
 import { SessionHeader } from '../../../components/SessionHeader';
+import { DRIVE_CATEGORIES } from '../../../lib/imageLoader';
+import { Cloud } from 'lucide-react';
 import Link from 'next/link';
 
 const IMAGE_CATEGORY_ICONS: Record<string, string> = {
@@ -380,6 +382,25 @@ export default function ConfidenteMentirosoPage() {
                         <Zap className={`w-4 h-4 ${game.categories.includes('PICSUM_RANDOM') ? 'text-yellow-400' : 'text-gray-500'}`} />
                         <span>Fotos Aleatorias</span>
                       </button>
+
+                      {/* Drive Categories */}
+                      {DRIVE_CATEGORIES.map(cat => {
+                        const isSelected = game.categories.includes(cat);
+                        return (
+                          <button
+                            key={cat}
+                            onClick={() => game.toggleCategory(cat)}
+                            className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl border-2 transition-all font-bold text-xs sm:text-sm ${
+                              isSelected 
+                                ? 'bg-emerald-500/20 border-emerald-400 text-emerald-100 shadow-[0_0_15px_rgba(52,211,153,0.2)]' 
+                                : 'bg-transparent border-white/5 text-gray-500 hover:border-white/10'
+                            }`}
+                          >
+                            <Cloud className={`w-4 h-4 ${isSelected ? 'text-emerald-400' : 'text-gray-500'}`} />
+                            <span className="capitalize">{cat}</span>
+                          </button>
+                        );
+                      })}
                     </div>
                   )}
                 </div>

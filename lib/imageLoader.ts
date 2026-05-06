@@ -1,4 +1,6 @@
-export type Category = 'flags' | 'memes' | 'movies' | 'objects' | 'geek' | 'picsum';
+import driveCatalog from './constants/drive-catalog.json';
+
+export type Category = 'flags' | 'memes' | 'movies' | 'objects' | 'geek' | 'picsum' | string;
 
 export interface GameImage {
   id: string;
@@ -7,21 +9,23 @@ export interface GameImage {
   title: string;
 }
 
+export const DRIVE_CATEGORIES = Object.keys(driveCatalog);
+
 export async function getPicsumUrl(): Promise<string> {
   return `https://picsum.photos/seed/${Math.random()}/1080/1350`;
 }
 
-// Estructura modular para que Antigravity la entienda
-export const CATEGORIES = {
-  // ... existing code
-};
-
 export class ImageEngine {
   
-  static async getRandomImage(categories: Category[]): Promise<GameImage> {
+  static async getRandomImage(categories: string[]): Promise<GameImage> {
     const category = categories[Math.floor(Math.random() * categories.length)];
     
     try {
+      // Check if it's a Drive category
+      if (DRIVE_CATEGORIES.includes(category)) {
+        return await this.getDriveImage(category);
+      }
+
       switch (category) {
         case 'picsum':
           return {
@@ -39,12 +43,24 @@ export class ImageEngine {
         case 'objects':
         case 'geek':
         default:
-          return await this.getUnsplash(category);
+          return await this.getUnsplash(category as any);
       }
     } catch (error) {
       console.error(`Error fetching from ${category}, falling back...`, error);
-      return this.getFallbackImage(category);
+      return this.getFallbackImage('picsum');
     }
+  }
+
+  private static async getDriveImage(categoryName: string): Promise<GameImage> {
+    const images = (driveCatalog as any)[categoryName];
+    if (!images || images.length === 0) throw new Error('Category empty');
+    const random = images[Math.floor(Math.random() * images.length)];
+    return {
+      id: random.id,
+      url: random.url,
+      category: categoryName,
+      title: random.name
+    };
   }
 // ... rest of the file
 

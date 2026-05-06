@@ -1,0 +1,32 @@
+name: Sync Google Drive Images
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Every night at 00:00
+  workflow_dispatch: # Manual trigger
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/current-node-version@v1
+
+      - name: Install dependencies
+        run: npm install googleapis
+
+      - name: Run Sync Script
+        env:
+          GOOGLE_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
+        run: node scripts/sync-drive.mjs
+
+      - name: Commit and Push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add lib/constants/drive-catalog.json
+          git commit -m "chore: sync images from Google Drive [skip ci]" || echo "No changes to commit"
+          git push
