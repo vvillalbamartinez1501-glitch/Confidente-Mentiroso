@@ -16,7 +16,8 @@ export async function getImageSecret(categories: ImageCategory[]): Promise<GameS
   const img = await ImageEngine.getRandomImage(categories);
   return {
     type: 'image',
-    content: img
+    content: img.url,
+    category: img.title
   };
 }
 
@@ -25,6 +26,8 @@ export async function getRandomSecret(mode: 'WORDS' | 'IMAGES', categories: stri
     const cat = categories[Math.floor(Math.random() * categories.length)] as WordCategory;
     return getWordSecret(cat);
   } else {
-    return getImageSecret(categories as ImageCategory[]);
+    // Handle PICSUM_RANDOM mapping to 'picsum'
+    const imageCategories = categories.map(c => c === 'PICSUM_RANDOM' ? 'picsum' : c) as ImageCategory[];
+    return getImageSecret(imageCategories);
   }
 }

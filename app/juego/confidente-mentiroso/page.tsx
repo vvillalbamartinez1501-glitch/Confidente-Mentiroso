@@ -349,23 +349,38 @@ export default function ConfidenteMentirosoPage() {
                       );
                     })
                   ) : (
-                    Object.entries(IMAGE_CATEGORY_ICONS).map(([cat, icon]) => {
-                      const isSelected = game.categories.includes(cat);
-                      return (
-                        <button
-                          key={cat}
-                          onClick={() => game.toggleCategory(cat)}
-                          className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl border-2 transition-all font-bold text-xs sm:text-sm ${
-                            isSelected 
-                              ? 'bg-blue-500/20 border-blue-400 text-blue-100' 
-                              : 'bg-transparent border-white/5 text-gray-500 hover:border-white/10'
-                          }`}
-                        >
-                          <span>{icon}</span>
-                          <span className="capitalize">{cat === 'flags' ? 'Banderas' : cat}</span>
-                        </button>
-                      );
-                    })
+                    <div className="flex flex-wrap gap-2 sm:gap-3">
+                      {Object.entries(IMAGE_CATEGORY_ICONS).map(([cat, icon]) => {
+                        const isSelected = game.categories.includes(cat);
+                        return (
+                          <button
+                            key={cat}
+                            onClick={() => game.toggleCategory(cat)}
+                            className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl border-2 transition-all font-bold text-xs sm:text-sm ${
+                              isSelected 
+                                ? 'bg-blue-500/20 border-blue-400 text-blue-100' 
+                                : 'bg-transparent border-white/5 text-gray-500 hover:border-white/10'
+                            }`}
+                          >
+                            <span>{icon}</span>
+                            <span className="capitalize">{cat === 'flags' ? 'Banderas' : cat}</span>
+                          </button>
+                        );
+                      })}
+                      
+                      {/* Picsum Provider Button */}
+                      <button
+                        onClick={() => game.toggleCategory('PICSUM_RANDOM')}
+                        className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl border-2 transition-all font-bold text-xs sm:text-sm ${
+                          game.categories.includes('PICSUM_RANDOM') 
+                            ? 'bg-yellow-500/20 border-yellow-400 text-yellow-100 shadow-[0_0_15px_rgba(250,204,21,0.2)]' 
+                            : 'bg-transparent border-white/5 text-gray-500 hover:border-white/10'
+                        }`}
+                      >
+                        <Zap className={`w-4 h-4 ${game.categories.includes('PICSUM_RANDOM') ? 'text-yellow-400' : 'text-gray-500'}`} />
+                        <span>Fotos Aleatorias</span>
+                      </button>
+                    </div>
                   )}
                 </div>
               </div>

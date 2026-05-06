@@ -1,4 +1,4 @@
-export type Category = 'flags' | 'memes' | 'movies' | 'objects' | 'geek';
+export type Category = 'flags' | 'memes' | 'movies' | 'objects' | 'geek' | 'picsum';
 
 export interface GameImage {
   id: string;
@@ -7,33 +7,13 @@ export interface GameImage {
   title: string;
 }
 
+export async function getPicsumUrl(): Promise<string> {
+  return `https://picsum.photos/seed/${Math.random()}/1080/1350`;
+}
+
 // Estructura modular para que Antigravity la entienda
 export const CATEGORIES = {
-  OBJETOS: {
-    name: 'Cosas Comunes',
-    fetcher: async () => {
-      const res = await fetch(`https://api.unsplash.com/photos/random?client_id=${process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY || 'TU_KEY'}`);
-      const data = await res.json();
-      return data.urls.regular;
-    }
-  },
-  BANDERAS: {
-    name: 'Países del Mundo',
-    fetcher: async () => {
-      const res = await fetch('https://restcountries.com/v3.1/all');
-      const countries = await res.json();
-      const random = countries[Math.floor(Math.random() * countries.length)];
-      return random.flags.svg;
-    }
-  },
-  MEMES: {
-    name: 'Internet Memes',
-    fetcher: async () => {
-      const res = await fetch('https://api.giphy.com/v1/gifs/random?api_key=TU_KEY&tag=meme');
-      const data = await res.json();
-      return data.data.images.original.url;
-    }
-  }
+  // ... existing code
 };
 
 export class ImageEngine {
@@ -43,6 +23,13 @@ export class ImageEngine {
     
     try {
       switch (category) {
+        case 'picsum':
+          return {
+            id: crypto.randomUUID(),
+            url: await getPicsumUrl(),
+            category: 'picsum',
+            title: 'Foto Aleatoria'
+          };
         case 'flags':
           return await this.getFlag();
         case 'memes':
@@ -59,6 +46,7 @@ export class ImageEngine {
       return this.getFallbackImage(category);
     }
   }
+// ... rest of the file
 
   private static async getFlag(): Promise<GameImage> {
     const res = await fetch('https://restcountries.com/v3.1/all?fields=name,flags,cca3');

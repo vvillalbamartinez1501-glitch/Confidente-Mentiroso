@@ -121,7 +121,7 @@ export function useGameLogic(sessionManager: any) {
 
   const nextRound = () => {
     // Check if game is over (only 1 or 2 players left in MUERTE mode)
-    const alive = sessionManager.activeSession?.players.filter(p => !p.isEliminated) || [];
+    const alive = sessionManager.activeSession?.players.filter((p: Player) => !p.isEliminated) || [];
     if (sessionManager.activeSession?.scoringMode === 'MUERTE' && alive.length < 3) {
       setGameState('game_over');
     } else {
