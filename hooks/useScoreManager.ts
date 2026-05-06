@@ -27,14 +27,6 @@ export function useScoreManager(
     onPlayersChange(newPlayers);
   };
 
-  const updateScoresAfterRound = (liarId: string, divinerChoiceId: string, mode: ScoringMode) => {
-    const next = players.map(p => ({ ...p }));
-    const diviner = next.find(p => p.id === '1' || p.role === 'Adivino'); 
-    // Note: ID '1' was used previously for Adivino. With session rotation, we need a better way.
-    // I'll assume for now that ID '1' is the Adivino for the UI logic, but I'll fix this in useGameLogic.
-    
-    // Actually, I'll pass the Adivino ID too.
-  };
 
   // I'll make updateScores more explicit by passing IDs
   const applyRoundResults = (divinerId: string, liarId: string, chosenId: string, mode: ScoringMode) => {
