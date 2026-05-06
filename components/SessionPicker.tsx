@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Session } from '../lib/types';
-import { Plus, Trash2, Calendar, Users, ChevronRight, Play } from 'lucide-react';
+import { Plus, Trash2, Calendar, Users, ChevronRight, Play, AlertCircle } from 'lucide-react';
 
 interface SessionPickerProps {
   sessions: Session[];
@@ -16,6 +16,7 @@ export function SessionPicker({ sessions, onSelect, onCreate, onDelete }: Sessio
   const [newSessionName, setNewSessionName] = useState('');
   const [isCreating, setIsCreating] = useState(false);
   const [sessionToDelete, setSessionToDelete] = useState<string | null>(null);
+  const [isClearingAll, setIsClearingAll] = useState(false);
 
   const handleCreate = () => {
     if (newSessionName.trim()) {
@@ -160,6 +161,56 @@ export function SessionPicker({ sessions, onSelect, onCreate, onDelete }: Sessio
             </motion.div>
           ))
         )}
+      </div>
+      {/* Danger Zone */}
+      <div className="mt-8 pt-6 border-t border-white/5 flex flex-col gap-4">
+        <h3 className="text-[10px] font-black text-gray-600 uppercase tracking-[0.2em] px-2">Zona de Peligro</h3>
+        
+        <AnimatePresence mode="wait">
+          {!isClearingAll ? (
+            <motion.button 
+              key="clear-btn"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsClearingAll(true)}
+              className="flex items-center justify-center gap-3 p-4 bg-red-500/5 hover:bg-red-500/10 border border-red-500/20 rounded-2xl text-red-500/60 hover:text-red-500 transition-all group"
+            >
+              <Trash2 className="w-4 h-4" />
+              <span className="text-[10px] font-black uppercase tracking-widest">Borrar todos los datos</span>
+            </motion.button>
+          ) : (
+            <motion.div 
+              key="clear-confirm"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="p-5 bg-red-600 rounded-2xl flex flex-col gap-4 shadow-2xl shadow-red-900/40"
+            >
+              <div className="flex items-center gap-3">
+                <AlertCircle className="w-5 h-5 text-white animate-pulse" />
+                <p className="text-[10px] font-black text-white uppercase tracking-tight">¿Estás seguro? Se borrarán todas las sesiones y puntos permanentemente.</p>
+              </div>
+              <div className="flex gap-2">
+                <button 
+                  onClick={() => setIsClearingAll(false)}
+                  className="flex-1 py-2 bg-black/20 hover:bg-black/30 rounded-xl text-white font-bold uppercase text-[9px]"
+                >
+                  Cancelar
+                </button>
+                <button 
+                  onClick={() => {
+                    localStorage.clear();
+                    window.location.reload();
+                  }}
+                  className="flex-[2] py-2 bg-white text-red-600 rounded-xl font-black uppercase text-[9px] shadow-lg"
+                >
+                  Sí, borrar todo
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
