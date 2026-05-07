@@ -86,7 +86,7 @@ export default function TruthOrDarePage() {
       <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-orange-600/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-red-600/10 rounded-full blur-[100px] pointer-events-none" />
 
-      <SessionHeader gameTitle="Verdad o Reto" />
+      <SessionHeader gameTitle="Verdad o Reto" phase={phase} />
 
       <AnimatePresence mode="wait">
         {!activeSession ? (

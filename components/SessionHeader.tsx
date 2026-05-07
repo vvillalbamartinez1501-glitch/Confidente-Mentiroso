@@ -13,42 +13,56 @@ import { SessionPicker } from './SessionPicker';
 interface SessionHeaderProps {
   gameTitle: string;
   gameColor?: string;
+  phase?: string; // Phase to control visibility
 }
 
-export function SessionHeader({ gameTitle, gameColor = 'text-blue-400' }: SessionHeaderProps) {
+export function SessionHeader({ gameTitle, gameColor = 'text-blue-400', phase = 'lobby' }: SessionHeaderProps) {
   const { activeSession, sessions, setActiveSessionId, createSession, deleteSession } = useGlobalContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // Define phases where the header should be hidden
+  const hiddenPhases = ['assignment', 'playing', 'voting', 'result', 'game_over'];
+  const isHidden = hiddenPhases.includes(phase);
+
   return (
     <>
-      <div className="absolute top-0 left-0 right-0 p-4 flex justify-between items-center z-50 bg-black/20 backdrop-blur-md border-b border-white/5">
-        <div className="flex items-center gap-3">
-          <Link href="/" className="p-2 hover:bg-white/5 rounded-xl transition-colors group">
-            <HomeIcon className="w-5 h-5 text-gray-500 group-hover:text-white transition-colors" />
-          </Link>
-          <div className="h-6 w-[1px] bg-white/10" />
-          <div>
-            <h1 className={`text-sm sm:text-base font-black italic tracking-tighter uppercase ${gameColor}`}>
-              {gameTitle}
-            </h1>
-          </div>
-        </div>
-        
-        {activeSession && (
-          <button 
-            onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-4 bg-white/5 hover:bg-white/10 border border-white/10 p-1.5 pl-4 rounded-2xl transition-all group"
+      <AnimatePresence>
+        {!isHidden && (
+          <motion.header 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="w-full p-4 flex justify-between items-center z-40 bg-black/20 backdrop-blur-md border-b border-white/5 relative"
           >
-            <div className="text-right hidden sm:block">
-              <p className="text-[9px] text-gray-500 font-black uppercase tracking-widest leading-none mb-1">Sesión Actual</p>
-              <p className="text-xs font-bold text-white truncate max-w-[120px]">{activeSession.name}</p>
+            <div className="flex items-center gap-3">
+              <Link href="/hub" className="p-2 hover:bg-white/5 rounded-xl transition-colors group">
+                <HomeIcon className="w-5 h-5 text-gray-500 group-hover:text-white transition-colors" />
+              </Link>
+              <div className="h-6 w-[1px] bg-white/10" />
+              <div>
+                <h1 className={`text-sm sm:text-base font-black italic tracking-tighter uppercase ${gameColor}`}>
+                  {gameTitle}
+                </h1>
+              </div>
             </div>
-            <div className="p-2 bg-white/5 rounded-xl group-hover:bg-blue-500/20 transition-colors">
-              <Layers className="w-4 h-4 text-gray-400 group-hover:text-blue-400" />
-            </div>
-          </button>
+            
+            {activeSession && (
+              <button 
+                onClick={() => setIsModalOpen(true)}
+                className="flex items-center gap-4 bg-white/5 hover:bg-white/10 border border-white/10 p-1.5 pl-4 rounded-2xl transition-all group"
+              >
+                <div className="text-right hidden sm:block">
+                  <p className="text-[9px] text-gray-500 font-black uppercase tracking-widest leading-none mb-1">Sesión Actual</p>
+                  <p className="text-xs font-bold text-white truncate max-w-[120px]">{activeSession.name}</p>
+                </div>
+                <div className="p-2 bg-white/5 rounded-xl group-hover:bg-blue-500/20 transition-colors">
+                  <Layers className="w-4 h-4 text-gray-400 group-hover:text-blue-400" />
+                </div>
+              </button>
+            )}
+          </motion.header>
         )}
-      </div>
+      </AnimatePresence>
 
       <AnimatePresence>
         {isModalOpen && (

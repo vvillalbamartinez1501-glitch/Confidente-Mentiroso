@@ -90,7 +90,7 @@ export default function ConfidenteMentirosoPage() {
   return (
     <main className="flex-1 flex flex-col items-center justify-center p-4 sm:p-6 relative overflow-hidden bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-gray-900 via-[#0f111a] to-black min-h-screen">
       
-      <SessionHeader gameTitle="Confidente y Mentiroso" />
+      <SessionHeader gameTitle="Confidente y Mentiroso" phase={game.gameState} />
 
       {/* Background Decor */}
       <div className="absolute top-[-10%] left-[-10%] w-64 sm:w-96 h-64 sm:h-96 bg-purple-600/10 rounded-full blur-[100px] pointer-events-none" />
