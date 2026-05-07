@@ -782,7 +782,7 @@ export default function ConfidenteMentirosoPage() {
 
             <div className="flex w-full gap-3 mt-2">
               <Link
-                href="/"
+                href="/hub"
                 onClick={() => game.isOnline && game.isHost && sessionManager.leaveRoom()}
                 className="flex-1 py-4 bg-white/5 border border-white/10 rounded-2xl font-black text-base transition-all flex items-center justify-center gap-2 uppercase tracking-widest text-gray-400 hover:text-white hover:bg-white/10"
               >
