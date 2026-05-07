@@ -2,6 +2,8 @@ export type GameMode = 'WORDS' | 'IMAGES';
 
 export type ScoringMode = 'ORIGINAL' | 'MANSALVA' | 'MUERTE';
 
+export type ConnectionMode = 'LOCAL' | 'ONLINE';
+
 export type GameState = 
   | 'home' 
   | 'session_select'
@@ -13,7 +15,8 @@ export type GameState =
   | 'playing' 
   | 'voting' 
   | 'result' 
-  | 'game_over';
+  | 'game_over'
+  | 'lobby_online';
 
 export type Role = 'Adivino' | 'Confidente' | 'Mentiroso' | 'Espectador';
 
@@ -23,7 +26,9 @@ export interface Player {
   score: number;
   hp: number;
   isEliminated: boolean;
-  isManualSpectator?: boolean; // New property
+  isManualSpectator?: boolean;
+  isHost?: boolean;
+  status?: 'online' | 'offline';
 }
 
 export interface PlayerRole {
@@ -40,6 +45,18 @@ export interface Session {
   lastPlayed: string;
   players: Player[];
   scoringMode: ScoringMode;
+  connectionMode?: ConnectionMode;
+  roomCode?: string;
+  isHost?: boolean;
+}
+
+export interface OnlineRoom {
+  id: string;
+  code: string;
+  host_id: string;
+  status: 'waiting' | 'playing' | 'finished';
+  game_state: any;
+  created_at: string;
 }
 
 export interface GameSecret {
@@ -56,8 +73,10 @@ export interface GameInfo {
   color: string;
   isNew?: boolean;
   isBeta?: boolean;
+  multiplayer?: boolean;
 }
 
 export interface GameModule {
   onScoreReport: (results: { playerId: string; scoreDelta: number; hpDelta: number }[]) => void;
 }
+

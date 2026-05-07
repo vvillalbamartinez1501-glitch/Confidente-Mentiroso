@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Session, Player, ScoringMode } from '../lib/types';
+import { Session, Player, ScoringMode, ConnectionMode } from '../lib/types';
 
 const SESSIONS_STORAGE_KEY = 'confidente_mentiroso_sessions';
 
@@ -28,18 +28,21 @@ export function useSessionManager() {
 
   const activeSession = sessions.find(s => s.id === activeSessionId) || null;
 
-  const createSession = (name: string) => {
+  const createSession = (name: string, mode: ConnectionMode = 'LOCAL', roomCode?: string, isHost: boolean = true) => {
     const newSession: Session = {
       id: crypto.randomUUID(),
       name,
       createdAt: new Date().toISOString(),
       lastPlayed: new Date().toISOString(),
-      players: [
+      players: mode === 'LOCAL' ? [
         { id: crypto.randomUUID(), name: 'Adivino', score: 0, hp: 5, isEliminated: false, isManualSpectator: false },
         { id: crypto.randomUUID(), name: 'Jugador 2', score: 0, hp: 5, isEliminated: false, isManualSpectator: false },
         { id: crypto.randomUUID(), name: 'Jugador 3', score: 0, hp: 5, isEliminated: false, isManualSpectator: false },
-      ],
-      scoringMode: 'ORIGINAL'
+      ] : [],
+      scoringMode: 'ORIGINAL',
+      connectionMode: mode,
+      roomCode: roomCode,
+      isHost: isHost
     };
     setSessions(prev => [newSession, ...prev]);
     setActiveSessionId(newSession.id);
@@ -66,6 +69,7 @@ export function useSessionManager() {
     if (!activeSessionId) return;
     updateSession(activeSessionId, { scoringMode });
   };
+
 
   return {
     sessions,
