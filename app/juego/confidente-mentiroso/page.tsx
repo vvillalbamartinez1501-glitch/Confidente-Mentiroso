@@ -579,7 +579,9 @@ export default function ConfidenteMentirosoPage() {
                           </h4>
                           {game.roles.find(r => r.playerId === sessionManager.playerId)?.role !== 'Adivino' && (
                              <p className="mt-4 text-xs font-bold text-gray-400">
-                               El Secreto es: <span className="text-white uppercase tracking-widest">{game.currentSecret?.title}</span>
+                               El Secreto es: <span className="text-white uppercase tracking-widest">
+                                 {game.currentSecret?.type === 'text' ? game.currentSecret.content : game.currentSecret?.content?.title}
+                               </span>
                              </p>
                           )}
                         </div>
