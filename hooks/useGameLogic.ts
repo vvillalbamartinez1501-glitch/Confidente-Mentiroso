@@ -131,7 +131,7 @@ export function useGameLogic(sessionManager: any) {
 
       const secret = await getRandomSecret(gameMode, categories);
       
-      const allPlayers = isOnline ? sessionManager.onlinePlayers : sessionManager.activeSession.players;
+      const allPlayers: Player[] = isOnline ? sessionManager.onlinePlayers : (sessionManager.activeSession?.players || []);
       const alivePlayers = allPlayers.filter((p: Player) => !p.isEliminated);
       const activePlayers = alivePlayers.filter((p: Player) => !p.isManualSpectator);
       
@@ -142,10 +142,10 @@ export function useGameLogic(sessionManager: any) {
       }
 
       // Robust Fisher-Yates Randomization
-      const shuffledActive = shuffleArray(activePlayers);
-      const diviner = shuffledActive[0];
-      const confidant = shuffledActive[1];
-      const liar = shuffledActive[2];
+      const shuffledActive = shuffleArray<Player>(activePlayers);
+      const diviner = shuffledActive[0] as Player;
+      const confidant = shuffledActive[1] as Player;
+      const liar = shuffledActive[2] as Player;
 
       const assignedRoles: PlayerRole[] = allPlayers.map((p: Player) => {
         let role: Role = 'Espectador';
