@@ -59,5 +59,9 @@ export function useGameState() {
     createRoom: context.createRoom,
     joinRoom: context.joinRoom,
     leaveRoom: context.leaveRoom,
+    setActiveSessionId: context.setActiveSessionId,
+    sessions: context.sessions,
+    createSession: context.createSession,
+    deleteSession: context.deleteSession,
   };
 }

@@ -20,7 +20,9 @@ export function useGameLogic() {
   const { 
     isOnline, isHost, players, onlineGameState, 
     updatePlayers, updateScoring, updateGameState, 
-    activeSession 
+    activeSession, playerId, sessions, 
+    setActiveSessionId, createSession, deleteSession,
+    onlineError, kickPlayer, createRoom, joinRoom, leaveRoom
   } = useGameState();
 
   const [gameState, setGameState] = useState<GameState>('home');
@@ -240,6 +242,18 @@ export function useGameLogic() {
     nextRound,
     resetGame,
     scoringMode: activeSession?.scoringMode || 'ORIGINAL',
-    updatePlayers
+    updatePlayers,
+    playerId,
+    sessions,
+    setActiveSessionId,
+    createSession,
+    deleteSession,
+    activeSession,
+    onlinePlayers: players, // Re-map to use unified players or specific online players
+    onlineError,
+    kickPlayer,
+    createRoom,
+    joinRoom,
+    leaveRoom
   };
 }
