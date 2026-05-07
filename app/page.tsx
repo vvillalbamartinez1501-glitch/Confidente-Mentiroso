@@ -11,6 +11,7 @@ import {
 import Link from 'next/link';
 import { useGlobalContext } from '../context/GlobalContext';
 import { GameInfo, ConnectionMode } from '../lib/types';
+import { Footer } from '../components/Footer';
 
 const GAMES: GameInfo[] = [
   {
@@ -59,10 +60,6 @@ export default function GameHub() {
   const [showJoinInput, setShowJoinInput] = React.useState(false);
   const [roomCodeInput, setRoomCodeInput] = React.useState('');
   const [isProcessing, setIsProcessing] = React.useState(false);
-
-  const handleQuickSession = () => {
-    createSession(`Sesión ${new Date().toLocaleDateString()}`, 'LOCAL');
-  };
 
   const handleCreateOnline = async () => {
     setIsProcessing(true);
@@ -239,10 +236,7 @@ export default function GameHub() {
         </div>
       </section>
 
-      <footer className="p-8 text-center text-gray-600 text-[10px] font-bold uppercase tracking-[0.4em]">
-        Construido para la Diversión Social &bull; v2.5 Online Edition
-      </footer>
+      <Footer />
     </main>
   );
 }
-

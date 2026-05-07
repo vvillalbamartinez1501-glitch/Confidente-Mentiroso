@@ -21,6 +21,7 @@ import { SessionHeader } from '../../../components/SessionHeader';
 import { DRIVE_CATEGORIES } from '../../../lib/imageLoader';
 import { Cloud } from 'lucide-react';
 import Link from 'next/link';
+import { Footer } from '../../../components/Footer';
 
 const IMAGE_CATEGORY_ICONS: Record<string, string> = {
   flags: '🌍',
@@ -834,6 +835,7 @@ export default function ConfidenteMentirosoPage() {
         )}
 
       </AnimatePresence>
+      <Footer />
     </main>
   );
 }
