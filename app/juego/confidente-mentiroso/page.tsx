@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -24,29 +24,29 @@ import Link from 'next/link';
 import { Footer } from '../../../components/Footer';
 
 const IMAGE_CATEGORY_ICONS: Record<string, string> = {
-  flags: 'ðŸŒ',
-  memes: 'ðŸ˜‚',
-  movies: 'ðŸŽ¬',
-  objects: 'ðŸ“¦',
-  geek: 'ðŸ‘¾'
+  flags: '🌍',
+  memes: '😂',
+  movies: '🎬',
+  objects: '📦',
+  geek: '👾'
 };
 
 const SCORING_DESCRIPTIONS: Record<ScoringMode, { title: string, desc: string, icon: any, color: string }> = {
   ORIGINAL: {
     title: 'Modo Original',
-    desc: 'Sistema clÃ¡sico. Puntos por engaÃ±ar o descubrir.',
+    desc: 'Sistema clásico. Puntos por engañar o descubrir.',
     icon: Target,
     color: 'text-blue-400'
   },
   MANSALVA: {
     title: 'Puntos a Mansalva',
-    desc: 'Modo caÃ³tico. El que sea elegido suma siempre.',
+    desc: 'Modo caótico. El que sea elegido suma siempre.',
     icon: Zap,
     color: 'text-yellow-400'
   },
   MUERTE: {
     title: 'Muerte por Puntos',
-    desc: 'Los jugadores tienen HP. El Ãºltimo en pie gana.',
+    desc: 'Los jugadores tienen HP. El último en pie gana.',
     icon: Swords,
     color: 'text-rose-500'
   }
@@ -140,7 +140,7 @@ export default function ConfidenteMentirosoPage() {
                 className="flex items-center justify-center gap-3 w-full py-4 bg-transparent border border-white/10 rounded-2xl hover:bg-white/5 transition-all text-gray-400"
               >
                 <Info className="w-5 h-5" />
-                <span className="font-semibold uppercase tracking-wider text-[10px]">CÃ³mo Jugar</span>
+                <span className="font-semibold uppercase tracking-wider text-[10px]">Cómo Jugar</span>
               </button>
             </div>
           </motion.div>
@@ -206,7 +206,7 @@ export default function ConfidenteMentirosoPage() {
                   onContinue={() => game.setGameState('scoring_select')}
                 />
                 <button onClick={() => game.setGameState('session_select')} className="mt-6 w-full text-gray-500 font-bold uppercase tracking-widest text-[10px] hover:text-white transition-colors">
-                  Cambiar SesiÃ³n
+                  Cambiar Sesión
                 </button>
               </>
             )}
@@ -225,13 +225,13 @@ export default function ConfidenteMentirosoPage() {
             {game.isOnline && !game.isHost ? (
                <div className="flex flex-col items-center gap-6 py-12">
                  <Loader2 className="w-12 h-12 text-blue-500 animate-spin" />
-                 <p className="text-sm font-black text-gray-500 uppercase tracking-[0.2em] text-center">El Host estÃ¡ eligiendo las reglas...</p>
+                 <p className="text-sm font-black text-gray-500 uppercase tracking-[0.2em] text-center">El Host está eligiendo las reglas...</p>
                </div>
             ) : (
               <>
                 <div className="text-center space-y-2">
                   <h2 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tighter">Reglas</h2>
-                  <p className="text-gray-400 font-medium italic text-sm">Â¿CÃ³mo quieres ganar?</p>
+                  <p className="text-gray-400 font-medium italic text-sm">¿Cómo quieres ganar?</p>
                 </div>
 
                 <div className="grid grid-cols-1 gap-3 w-full">
@@ -282,7 +282,7 @@ export default function ConfidenteMentirosoPage() {
             ) : (
               <>
                 <div className="text-center space-y-2">
-                  <h2 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tighter">Â¿QuÃ© adivinar?</h2>
+                  <h2 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tighter">¿Qué adivinar?</h2>
                   <p className="text-gray-400 font-medium text-sm">Elige el contenido</p>
                 </div>
 
@@ -309,7 +309,7 @@ export default function ConfidenteMentirosoPage() {
                     </div>
                     <div className="text-left">
                       <h3 className="text-xl sm:text-2xl font-bold text-white uppercase tracking-tighter">Fotos</h3>
-                      <p className="text-blue-300/60 text-[9px] sm:text-[10px] font-bold uppercase tracking-widest">ImÃ¡genes aleatorias</p>
+                      <p className="text-blue-300/60 text-[9px] sm:text-[10px] font-bold uppercase tracking-widest">Imágenes aleatorias</p>
                     </div>
                   </button>
                 </div>
@@ -334,7 +334,7 @@ export default function ConfidenteMentirosoPage() {
             {game.isOnline && !game.isHost ? (
                <div className="flex flex-col items-center gap-6 py-12">
                  <Loader2 className="w-12 h-12 text-blue-500 animate-spin" />
-                 <p className="text-sm font-black text-gray-500 uppercase tracking-[0.2em] text-center">El Host estÃ¡ configurando la partida...</p>
+                 <p className="text-sm font-black text-gray-500 uppercase tracking-[0.2em] text-center">El Host está configurando la partida...</p>
                </div>
             ) : (
               <>
@@ -350,7 +350,7 @@ export default function ConfidenteMentirosoPage() {
                   <div>
                     <h3 className="text-xs sm:text-sm font-bold text-gray-400 uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
                       <LayoutGrid className="w-4 h-4" />
-                      CategorÃ­as
+                      Categorías
                     </h3>
                     <div className="flex flex-wrap gap-2 sm:gap-3">
                       {game.gameMode === 'WORDS' ? (
@@ -443,7 +443,7 @@ export default function ConfidenteMentirosoPage() {
                               : 'bg-transparent border-white/5 text-gray-500'
                           }`}
                         >
-                          {t === Infinity ? 'âˆž' : `${t}s`}
+                          {t === Infinity ? '∞' : `${t}s`}
                         </button>
                       ))}
                     </div>
@@ -462,7 +462,7 @@ export default function ConfidenteMentirosoPage() {
                     disabled={game.categories.length === 0 || game.isLoading}
                     className="flex-1 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl font-black text-base sm:text-lg disabled:opacity-50 hover:shadow-[0_0_30px_rgba(59,130,246,0.4)] transition-all flex justify-center uppercase tracking-widest text-white"
                   >
-                    {game.isLoading ? '...' : 'Â¡A Jugar!'}
+                    {game.isLoading ? '...' : '¡A Jugar!'}
                   </button>
                 </div>
               </>
@@ -493,9 +493,9 @@ export default function ConfidenteMentirosoPage() {
                       <UserCheck className="w-10 h-10" />
                     </div>
                     <div>
-                      <h2 className="text-2xl font-black uppercase tracking-tighter mb-2">IdentificaciÃ³n del Adivino</h2>
+                      <h2 className="text-2xl font-black uppercase tracking-tighter mb-2">Identificación del Adivino</h2>
                       <p className="font-bold text-sm uppercase tracking-tight opacity-80">
-                        {game.roles.find(r => r.role === 'Adivino')?.player}, tÃº eres el Adivino.
+                        {game.roles.find(r => r.role === 'Adivino')?.player}, tú eres el Adivino.
                       </p>
                     </div>
                   </div>
@@ -504,12 +504,12 @@ export default function ConfidenteMentirosoPage() {
                     {game.isOnline ? (
                       <p className="text-gray-300 font-medium leading-relaxed italic">
                         {game.isHost 
-                          ? "Espera a que todos estÃ©n listos para ver los roles." 
-                          : "El Host mostrarÃ¡ los roles en breve..."}
+                          ? "Espera a que todos estén listos para ver los roles." 
+                          : "El Host mostrará los roles en breve..."}
                       </p>
                     ) : (
                       <p className="text-gray-300 font-medium leading-relaxed italic">
-                        "Entrega el dispositivo a tus compaÃ±eros. <br/> Ellos verÃ¡n el secreto mientras tÃº esperas."
+                        "Entrega el dispositivo a tus compañeros. <br/> Ellos verán el secreto mientras tú esperas."
                       </p>
                     )}
                   </div>
@@ -541,7 +541,7 @@ export default function ConfidenteMentirosoPage() {
                     <div className="p-2 bg-orange-500/20 rounded-full animate-bounce shrink-0">
                       <ShieldCheck className="w-5 h-5" />
                     </div>
-                    <p className="font-black text-left text-[11px] sm:text-xs uppercase tracking-tight">Â¡Memorizad vuestros roles!</p>
+                    <p className="font-black text-left text-[11px] sm:text-xs uppercase tracking-tight">¡Memorizad vuestros roles!</p>
                   </div>
 
                   <div className="glass-panel p-5 sm:p-6 rounded-3xl w-full flex flex-col gap-4 bg-white/5 border-white/10">
@@ -565,7 +565,7 @@ export default function ConfidenteMentirosoPage() {
                              </p>
                           )}
                         </div>
-                        <p className="text-[10px] font-black text-gray-600 uppercase tracking-widest text-center">InformaciÃ³n de la sala:</p>
+                        <p className="text-[10px] font-black text-gray-600 uppercase tracking-widest text-center">Información de la sala:</p>
                         <div className="grid grid-cols-2 gap-2">
                            {game.roles.filter(r => !r.isManualSpectator).map((r, i) => (
                              <div key={i} className="p-2 bg-white/5 rounded-xl border border-white/5 flex justify-between items-center">
@@ -607,7 +607,7 @@ export default function ConfidenteMentirosoPage() {
                       onClick={game.beginPlay}
                       className="w-full py-5 bg-white text-black rounded-2xl font-black text-lg shadow-2xl uppercase tracking-widest hover:scale-[1.02] transition-transform"
                     >
-                      Â¡Empezar Ronda!
+                      ¡Empezar Ronda!
                     </button>
                   )}
                   {game.isOnline && !game.isHost && (
@@ -632,7 +632,7 @@ export default function ConfidenteMentirosoPage() {
             <div className="w-full flex justify-between items-center px-1">
               <div className="px-4 py-1.5 bg-gray-800/80 backdrop-blur-xl rounded-full font-mono text-xl sm:text-2xl font-bold border border-white/10 flex items-center gap-2 sm:gap-3 text-white">
                 <Clock className="w-5 h-5 sm:w-6 h-6 text-indigo-400" />
-                {game.roundTime === Infinity ? 'âˆž' : `00:${game.timeLeft.toString().padStart(2, '0')}`}
+                {game.roundTime === Infinity ? '∞' : `00:${game.timeLeft.toString().padStart(2, '0')}`}
               </div>
               <div className="flex flex-col items-end">
                 <span className="text-indigo-400 font-black tracking-[0.2em] uppercase text-[9px] sm:text-[10px]">
@@ -651,7 +651,7 @@ export default function ConfidenteMentirosoPage() {
                 onClick={game.goToVoting}
                 className="w-full py-4 sm:py-5 mt-2 bg-indigo-600/20 border border-indigo-500/30 text-indigo-100 rounded-2xl font-black text-base sm:text-lg uppercase tracking-widest"
               >
-                Terminar DiscusiÃ³n
+                Terminar Discusión
               </button>
             )}
           </motion.div>
@@ -666,9 +666,9 @@ export default function ConfidenteMentirosoPage() {
             className="flex flex-col items-center w-full max-w-md gap-6 sm:gap-8 z-10 px-2 sm:px-0"
           >
             <div className="text-center space-y-2">
-              <h2 className="text-3xl sm:text-4xl font-black text-white uppercase tracking-tighter italic">VotaciÃ³n</h2>
+              <h2 className="text-3xl sm:text-4xl font-black text-white uppercase tracking-tighter italic">Votación</h2>
               <p className="text-gray-400 font-bold uppercase tracking-widest text-[9px] sm:text-[10px] px-6 sm:px-8 py-2 bg-white/5 rounded-full border border-white/10">
-                {game.roles.find(r => r.role === 'Adivino')?.player}, seÃ±ala al MENTIROSO
+                {game.roles.find(r => r.role === 'Adivino')?.player}, señala al MENTIROSO
               </p>
             </div>
 
@@ -676,7 +676,7 @@ export default function ConfidenteMentirosoPage() {
                <div className="flex flex-col items-center gap-6 py-12">
                  <Loader2 className="w-12 h-12 text-blue-500 animate-spin" />
                  <p className="text-sm font-black text-gray-500 uppercase tracking-[0.2em] text-center">
-                   {game.roles.find(r => r.role === 'Adivino')?.player} estÃ¡ votando...
+                   {game.roles.find(r => r.role === 'Adivino')?.player} está votando...
                  </p>
                </div>
             ) : (
@@ -695,7 +695,7 @@ export default function ConfidenteMentirosoPage() {
                     </div>
                     <div className="text-left relative z-10 truncate">
                         <h3 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tighter truncate">{r.player}</h3>
-                        <p className="text-gray-500 font-bold text-[9px] sm:text-[10px] uppercase tracking-widest">SeÃ±alar como Mentiroso</p>
+                        <p className="text-gray-500 font-bold text-[9px] sm:text-[10px] uppercase tracking-widest">Señalar como Mentiroso</p>
                     </div>
                   </button>
                 ))}

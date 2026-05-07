@@ -15,6 +15,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
+      <head>
+        <meta charSet="utf-8" />
+      </head>
       <body className="min-h-screen flex flex-col bg-[#0f111a] text-white">
         <GlobalProvider>
           {children}
