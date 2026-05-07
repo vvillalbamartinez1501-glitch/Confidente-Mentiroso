@@ -22,6 +22,7 @@ interface GlobalContextType {
   onlinePlayers: Player[];
   onlineGameState: any;
   onlineError: string | null;
+  playerId: string | null;
   createRoom: (hostName: string) => Promise<any>;
   joinRoom: (code: string, playerName: string) => Promise<any>;
   kickPlayer: (playerId: string) => Promise<void>;
