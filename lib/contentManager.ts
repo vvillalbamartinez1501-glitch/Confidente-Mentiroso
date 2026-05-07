@@ -16,7 +16,7 @@ export async function getImageSecret(categories: ImageCategory[]): Promise<GameS
   const img = await ImageEngine.getRandomImage(categories);
   return {
     type: 'image',
-    content: img.url,
+    content: img,
     category: img.title
   };
 }

@@ -10,15 +10,19 @@ export interface GameImage {
 }
 
 export const DRIVE_CATEGORIES = Object.keys(driveCatalog);
+export const FALLBACK_IMAGE_URL = 'https://picsum.photos/seed/fallback/1080/1350';
 
-export async function getPicsumUrl(): Promise<string> {
-  return `https://picsum.photos/seed/${Math.random()}/1080/1350`;
+export async function getPicsumUrl(seed?: string): Promise<string> {
+  const finalSeed = seed || Math.random().toString(36).substring(7);
+  return `https://picsum.photos/seed/${finalSeed}/1080/1350`;
 }
 
 export class ImageEngine {
   
   static async getRandomImage(categories: string[]): Promise<GameImage> {
-    const category = categories[Math.floor(Math.random() * categories.length)];
+    // If no categories provided or they are empty, default to picsum
+    const validCategories = (categories && categories.length > 0) ? categories : ['picsum'];
+    const category = validCategories[Math.floor(Math.random() * validCategories.length)];
     
     try {
       // Check if it's a Drive category
@@ -46,39 +50,53 @@ export class ImageEngine {
           return await this.getUnsplash(category as any);
       }
     } catch (error) {
-      console.error(`Error fetching from ${category}, falling back...`, error);
+      console.warn(`⚠️ Fallo al cargar categoría "${category}":`, error);
       return this.getFallbackImage('picsum');
     }
   }
 
   private static async getDriveImage(categoryName: string): Promise<GameImage> {
     const images = (driveCatalog as any)[categoryName];
-    if (!images || images.length === 0) throw new Error('Category empty');
+    
+    if (!images || !Array.isArray(images) || images.length === 0) {
+      console.warn(`⚠️ Catálogo de Drive para "${categoryName}" está vacío o no existe.`);
+      throw new Error(`Category ${categoryName} empty`);
+    }
+
     const random = images[Math.floor(Math.random() * images.length)];
+    
+    if (!random || !random.url) {
+      console.warn(`⚠️ Imagen no válida encontrada en categoría Drive "${categoryName}".`);
+      throw new Error('Invalid image data');
+    }
+
     return {
       id: random.id,
       url: random.url,
       category: categoryName,
-      title: random.name
+      title: random.name || 'Imagen de Drive'
     };
   }
-// ... rest of the file
 
   private static async getFlag(): Promise<GameImage> {
-    const res = await fetch('https://restcountries.com/v3.1/all?fields=name,flags,cca3');
-    const data = await res.json();
-    const randomCountry = data[Math.floor(Math.random() * data.length)];
-    return {
-      id: randomCountry.cca3,
-      url: randomCountry.flags.png,
-      category: 'flags',
-      title: randomCountry.name.common
-    };
+    try {
+      const res = await fetch('https://restcountries.com/v3.1/all?fields=name,flags,cca3');
+      if (!res.ok) throw new Error('Countries API failed');
+      const data = await res.json();
+      const randomCountry = data[Math.floor(Math.random() * data.length)];
+      return {
+        id: randomCountry.cca3,
+        url: randomCountry.flags.png,
+        category: 'flags',
+        title: randomCountry.name.common
+      };
+    } catch (e) {
+      console.warn('⚠️ Error en API de banderas, usando fallback.');
+      throw e;
+    }
   }
 
   private static async getMeme(): Promise<GameImage> {
-    // In a real app, use Giphy API with process.env.NEXT_PUBLIC_GIPHY_API_KEY
-    // Using a curated fallback list of memes for demonstration
     const fallbackMemes = [
       { id: '1', url: 'https://media.giphy.com/media/3o7aD2saalEvTe2y9i/giphy.gif', title: 'Meme 1' },
       { id: '2', url: 'https://media.giphy.com/media/xT9IgG50Fb7Mi0prBC/giphy.gif', title: 'Meme 2' },
@@ -89,8 +107,6 @@ export class ImageEngine {
   }
 
   private static async getMovie(): Promise<GameImage> {
-    // In a real app, use TMDB API
-    // Using TMDB image domain with some hardcoded popular posters if no API
     const fallbackMovies = [
       { id: '1', url: 'https://image.tmdb.org/t/p/w500/q6y0Go1tsGEsmtFryDOJo3dENH1.jpg', title: 'Movie 1' },
       { id: '2', url: 'https://image.tmdb.org/t/p/w500/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg', title: 'Movie 2' },
@@ -100,21 +116,19 @@ export class ImageEngine {
   }
 
   private static async getUnsplash(category: Category): Promise<GameImage> {
-    // Unsplash/Pixabay simulation
-    // Unsplash Source API was deprecated, using Picsum for mock images
     const randomId = Math.floor(Math.random() * 1000);
     return {
       id: `img_${randomId}`,
-      url: `https://picsum.photos/seed/${randomId}/800/600`,
+      url: `https://picsum.photos/seed/${randomId}/1080/1350`,
       category: category,
       title: `${category} image`
     };
   }
 
-  private static getFallbackImage(category: Category): GameImage {
+  public static getFallbackImage(category: Category): GameImage {
     return {
       id: 'fallback',
-      url: 'https://picsum.photos/800/600',
+      url: FALLBACK_IMAGE_URL,
       category: category,
       title: 'Imagen de Respaldo'
     };

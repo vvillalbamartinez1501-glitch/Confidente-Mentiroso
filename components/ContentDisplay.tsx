@@ -20,6 +20,16 @@ export function ContentDisplay({ secret, isLoading = false }: ContentDisplayProp
     );
   }
 
+  const [isImageLoading, setIsImageLoading] = React.useState(true);
+  const [imageSrc, setImageSrc] = React.useState(secret.type === 'image' ? secret.content.url : '');
+
+  React.useEffect(() => {
+    if (secret.type === 'image') {
+      setImageSrc(secret.content.url);
+      setIsImageLoading(true);
+    }
+  }, [secret]);
+
   if (secret.type === 'text') {
     return (
       <motion.div 
@@ -52,14 +62,29 @@ export function ContentDisplay({ secret, isLoading = false }: ContentDisplayProp
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="w-full aspect-square sm:aspect-[4/3] rounded-2xl overflow-hidden relative bg-black shadow-2xl group"
+      className="w-full aspect-square sm:aspect-[4/3] rounded-2xl overflow-hidden relative bg-gray-900 shadow-2xl group"
     >
+      {isImageLoading && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 animate-pulse z-20">
+          <Loader2 className="w-8 h-8 text-blue-400 animate-spin mb-2" />
+          <p className="text-gray-400 text-xs font-medium">Cargando imagen...</p>
+        </div>
+      )}
+      
       <img 
-        src={secret.content.url} 
+        key={imageSrc}
+        src={imageSrc} 
         alt={secret.content.title}
-        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+        className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-110 ${isImageLoading ? 'opacity-0' : 'opacity-100'}`}
+        onLoad={() => setIsImageLoading(false)}
+        onError={() => {
+          console.warn(`⚠️ Error al cargar imagen: ${imageSrc}. Usando fallback.`);
+          setImageSrc('https://picsum.photos/seed/fallback/1080/1350');
+          setIsImageLoading(false);
+        }}
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent p-4 sm:p-6 flex flex-col justify-end">
+      
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent p-4 sm:p-6 flex flex-col justify-end z-10">
         <p className="text-blue-400 text-[10px] sm:text-xs font-bold tracking-widest uppercase mb-1">
           {secret.content.category}
         </p>
