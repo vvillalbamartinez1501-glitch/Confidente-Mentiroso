@@ -86,7 +86,7 @@ export function useOnlineManager() {
   useEffect(() => {
     const handleBeforeUnload = () => {
       if (roomId && playerId) {
-        leaveRoom(roomId, playerId);
+        leaveRoom();
       }
     };
     window.addEventListener('beforeunload', handleBeforeUnload);
