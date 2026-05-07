@@ -38,6 +38,14 @@ const GAMES: GameInfo[] = [
     color: 'from-emerald-600 to-teal-700',
     isBeta: true,
     multiplayer: false
+  },
+  {
+    id: 'truth-or-dare',
+    title: 'Verdad o Reto',
+    description: 'El clásico juego de compromisos y secretos para romper el hielo.',
+    icon: '🔥',
+    color: 'from-orange-600 to-red-700',
+    multiplayer: true
   }
 ];
 
@@ -193,7 +201,7 @@ export default function GameHub() {
               transition={{ delay: i * 0.1 }}
             >
               <Link 
-                href={game.id === 'confidente-mentiroso' || game.id === 'impostor' ? `/juego/${game.id}` : '#'}
+                href={game.id === 'confidente-mentiroso' || game.id === 'impostor' || game.id === 'truth-or-dare' ? `/juego/${game.id}` : '#'}
                 className={`group relative flex flex-col h-full bg-gradient-to-br ${game.color} rounded-[2.5rem] p-8 overflow-hidden shadow-2xl hover:scale-[1.03] transition-all duration-500 border border-white/10`}
               >
                 <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:rotate-12 transition-transform duration-700">
