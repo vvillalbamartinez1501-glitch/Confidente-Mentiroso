@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { GameState, GameMode, ScoringMode, Role, Player, PlayerRole, GameSecret } from '../lib/types';
 import { getRandomSecret } from '../lib/contentManager';
 import { useScoreManager } from './useScoreManager';
+import { useGameState } from './useGameState';
 
 // Robust Fisher-Yates Shuffle Algorithm
 function shuffleArray<T>(array: T[]): T[] {
@@ -15,7 +16,13 @@ function shuffleArray<T>(array: T[]): T[] {
   return result;
 }
 
-export function useGameLogic(sessionManager: any) {
+export function useGameLogic() {
+  const { 
+    isOnline, isHost, players, onlineGameState, 
+    updatePlayers, updateScoring, updateGameState, 
+    activeSession 
+  } = useGameState();
+
   const [gameState, setGameState] = useState<GameState>('home');
   const [gameMode, setGameMode] = useState<GameMode>('WORDS');
   const [categories, setCategories] = useState<string[]>([]);
@@ -27,19 +34,16 @@ export function useGameLogic(sessionManager: any) {
   const [isLoading, setIsLoading] = useState(false);
   const [showRoles, setShowRoles] = useState(false);
 
-  const isOnline = sessionManager.activeSession?.connectionMode === 'ONLINE';
-  const isHost = sessionManager.isHost;
-
   const scoreManager = useScoreManager(
-    isOnline ? sessionManager.onlinePlayers : (sessionManager.activeSession?.players || []),
-    sessionManager.updateActiveSessionPlayers,
+    players,
+    updatePlayers,
     5 // Default initial HP
   );
 
-  // Sync state if online
+  // Sync state if online (Guest or Host receiving updates)
   useEffect(() => {
-    if (isOnline && sessionManager.onlineGameState) {
-      const state = sessionManager.onlineGameState;
+    if (isOnline && onlineGameState) {
+      const state = onlineGameState;
       if (state.phase) setGameState(state.phase as GameState);
       if (state.mode) setGameMode(state.mode as GameMode);
       if (state.categories) setCategories(state.categories);
@@ -50,14 +54,13 @@ export function useGameLogic(sessionManager: any) {
       if (state.timeLeft !== undefined) setTimeLeft(state.timeLeft);
       if (state.showRoles !== undefined) setShowRoles(state.showRoles);
     }
-  }, [isOnline, sessionManager.onlineGameState]);
+  }, [isOnline, onlineGameState]);
 
-  // Wrapped state updates for Host
-  const updateStateAndPush = (newPhase: GameState, extra?: any) => {
-    setGameState(newPhase);
+  // Unified state update function
+  const pushState = (updates: any) => {
     if (isOnline && isHost) {
-      sessionManager.updateGameState({
-        phase: newPhase,
+      updateGameState({
+        phase: gameState,
         mode: gameMode,
         categories,
         secret: currentSecret,
@@ -66,16 +69,19 @@ export function useGameLogic(sessionManager: any) {
         roundTime,
         timeLeft,
         showRoles,
-        ...extra
+        ...updates
       });
     }
   };
 
+  const updatePhase = (newPhase: GameState, extra?: any) => {
+    setGameState(newPhase);
+    pushState({ phase: newPhase, ...extra });
+  };
+
   const toggleShowRoles = (val: boolean) => {
     setShowRoles(val);
-    if (isOnline && isHost) {
-      sessionManager.updateGameState({ showRoles: val });
-    }
+    pushState({ showRoles: val });
   };
 
   // Timer logic
@@ -89,65 +95,49 @@ export function useGameLogic(sessionManager: any) {
     return () => clearInterval(timer);
   }, [gameState, timeLeft, roundTime, isOnline, isHost]);
 
-  const startGameSetup = () => updateStateAndPush('session_select');
-  
-  const goToGroupManage = () => updateStateAndPush('group_manage');
+  const startGameSetup = () => updatePhase('session_select');
+  const goToGroupManage = () => updatePhase('group_manage');
   
   const selectMode = (mode: GameMode) => {
     setGameMode(mode);
-    updateStateAndPush('setup', { mode });
+    updatePhase('setup', { mode });
   };
 
   const selectScoring = (mode: ScoringMode) => {
-    sessionManager.updateActiveSessionScoring(mode);
-    updateStateAndPush('mode_select');
+    updateScoring(mode);
+    updatePhase('mode_select');
   };
 
   const toggleCategory = (cat: string) => {
     const newCats = categories.includes(cat) ? categories.filter(c => c !== cat) : [...categories, cat];
     setCategories(newCats);
-    if (isOnline && isHost) {
-      sessionManager.updateGameState({ categories: newCats });
-    }
+    pushState({ categories: newCats });
   };
 
   const startRound = async () => {
-    if (!sessionManager.activeSession) return;
-    
-    // Safety check: Only Host calculates in Online mode
+    if (!activeSession) return;
     if (isOnline && !isHost) return;
 
     setIsLoading(true);
-    
-    // Feedback Delay (Small delay to ensure UI updates and processor is ready)
     await new Promise(resolve => setTimeout(resolve, 500));
 
     try {
-      // Explicit Reset
-      setRoles([]);
-      setCurrentSecret(null);
-      setVotedPlayerId(null);
-      setShowRoles(false);
-
       const secret = await getRandomSecret(gameMode, categories);
-      
-      const allPlayers: Player[] = isOnline ? sessionManager.onlinePlayers : (sessionManager.activeSession?.players || []);
-      const alivePlayers = allPlayers.filter((p: Player) => !p.isEliminated);
+      const alivePlayers = players.filter((p: Player) => !p.isEliminated);
       const activePlayers = alivePlayers.filter((p: Player) => !p.isManualSpectator);
       
       if (activePlayers.length < 3) {
-        alert("Necesitas al menos 3 jugadores activos (vivos y no marcados como espectadores).");
+        alert("Necesitas al menos 3 jugadores activos.");
         setIsLoading(false);
         return;
       }
 
-      // Robust Fisher-Yates Randomization
       const shuffledActive = shuffleArray<Player>(activePlayers);
       const diviner = shuffledActive[0] as Player;
       const confidant = shuffledActive[1] as Player;
       const liar = shuffledActive[2] as Player;
 
-      const assignedRoles: PlayerRole[] = allPlayers.map((p: Player) => {
+      const assignedRoles: PlayerRole[] = players.map((p: Player) => {
         let role: Role = 'Espectador';
         if (p.id === diviner.id) role = 'Adivino';
         else if (p.id === confidant.id) role = 'Confidente';
@@ -165,8 +155,7 @@ export function useGameLogic(sessionManager: any) {
       setCurrentSecret(secret);
       setTimeLeft(roundTime);
       
-      // Update state and push to all players
-      updateStateAndPush('assignment', { 
+      updatePhase('assignment', { 
         secret, 
         roles: assignedRoles, 
         timeLeft: roundTime,
@@ -180,9 +169,8 @@ export function useGameLogic(sessionManager: any) {
     }
   };
 
-  const beginPlay = () => updateStateAndPush('playing');
-  
-  const goToVoting = () => updateStateAndPush('voting');
+  const beginPlay = () => updatePhase('playing');
+  const goToVoting = () => updatePhase('voting');
 
   const submitVote = (targetPlayerId: string) => {
     setVotedPlayerId(targetPlayerId);
@@ -194,18 +182,16 @@ export function useGameLogic(sessionManager: any) {
       diviner.playerId,
       liar.playerId,
       targetPlayerId,
-      sessionManager.activeSession!.scoringMode
+      activeSession.scoringMode
     );
     
-    updateStateAndPush('result', { votedPlayerId: targetPlayerId });
+    updatePhase('result', { votedPlayerId: targetPlayerId });
   };
 
   const nextRound = () => {
-    const players = isOnline ? sessionManager.onlinePlayers : sessionManager.activeSession?.players;
     const alive = players?.filter((p: Player) => !p.isEliminated) || [];
-    
-    if (sessionManager.activeSession?.scoringMode === 'MUERTE' && alive.length < 3) {
-      updateStateAndPush('game_over');
+    if (activeSession?.scoringMode === 'MUERTE' && alive.length < 3) {
+      updatePhase('game_over');
     } else {
       startRound();
     }
@@ -216,7 +202,7 @@ export function useGameLogic(sessionManager: any) {
     setCurrentSecret(null);
     setVotedPlayerId(null);
     setShowRoles(false);
-    updateStateAndPush('home', { 
+    updatePhase('home', { 
       secret: null, 
       roles: [], 
       votedPlayerId: null,
@@ -239,7 +225,7 @@ export function useGameLogic(sessionManager: any) {
     isHost,
     showRoles,
     toggleShowRoles,
-    sessionManager,
+    players,
     scoreManager,
     startGameSetup,
     goToGroupManage,
@@ -253,7 +239,7 @@ export function useGameLogic(sessionManager: any) {
     submitVote,
     nextRound,
     resetGame,
-    scoringMode: sessionManager.activeSession?.scoringMode || 'ORIGINAL'
+    scoringMode: activeSession?.scoringMode || 'ORIGINAL',
+    updatePlayers
   };
 }
-

@@ -1,20 +1,27 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Flame, MessageCircle, ArrowLeft, RotateCcw, Zap, Heart } from 'lucide-react';
+import { Flame, MessageCircle, ArrowLeft } from 'lucide-react';
 import { Player } from '../../lib/types';
-import Link from 'next/link';
 
 interface TruthOrDareGameProps {
   players: Player[];
+  currentPlayerIndex: number;
+  lastAction: 'VERDAD' | 'RETO' | null;
+  history: { player: string, type: 'VERDAD' | 'RETO' }[];
+  onAction: (type: 'VERDAD' | 'RETO') => void;
   onBackToMenu: () => void;
 }
 
-export default function TruthOrDareGame({ players, onBackToMenu }: TruthOrDareGameProps) {
-  const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
-  const [lastAction, setLastAction] = useState<'VERDAD' | 'RETO' | null>(null);
-  const [history, setHistory] = useState<{ player: string, type: 'VERDAD' | 'RETO' }[]>([]);
+export default function TruthOrDareGame({ 
+  players, 
+  currentPlayerIndex, 
+  lastAction, 
+  history, 
+  onAction, 
+  onBackToMenu 
+}: TruthOrDareGameProps) {
 
   if (!players || players.length === 0) {
     return (
@@ -30,18 +37,7 @@ export default function TruthOrDareGame({ players, onBackToMenu }: TruthOrDareGa
     );
   }
 
-  const currentPlayer = players[currentPlayerIndex];
-
-  const handleAction = (type: 'VERDAD' | 'RETO') => {
-    setLastAction(type);
-    setHistory(prev => [{ player: currentPlayer.name, type }, ...prev].slice(0, 5));
-    
-    // Avanzar al siguiente jugador de forma circular
-    setTimeout(() => {
-      setCurrentPlayerIndex((prev) => (prev + 1) % players.length);
-      setLastAction(null);
-    }, 1500);
-  };
+  const currentPlayer = players[currentPlayerIndex % players.length];
 
   return (
     <div className="w-full max-w-md flex flex-col gap-8 relative z-10">
@@ -56,7 +52,7 @@ export default function TruthOrDareGame({ players, onBackToMenu }: TruthOrDareGa
         </button>
         <div className="text-right">
           <p className="text-[10px] font-black text-orange-500 uppercase tracking-[0.3em]">Turno Actual</p>
-          <p className="text-xs font-bold text-gray-500">Jugador {currentPlayerIndex + 1} de {players.length}</p>
+          <p className="text-xs font-bold text-gray-500">Jugador {(currentPlayerIndex % players.length) + 1} de {players.length}</p>
         </div>
       </div>
 
@@ -77,8 +73,6 @@ export default function TruthOrDareGame({ players, onBackToMenu }: TruthOrDareGa
                >
                  <Flame className="w-10 h-10 text-white" />
                </motion.div>
-               
-               {/* Decorative rings */}
                <div className="absolute inset-0 rounded-[2rem] border border-white/20 animate-ping opacity-20" />
             </div>
             
@@ -100,7 +94,7 @@ export default function TruthOrDareGame({ players, onBackToMenu }: TruthOrDareGa
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={() => !lastAction && handleAction('VERDAD')}
+          onClick={() => !lastAction && onAction('VERDAD')}
           disabled={!!lastAction}
           className={`group relative overflow-hidden p-8 rounded-[2.5rem] flex flex-col items-center gap-4 transition-all border-2 ${
             lastAction === 'VERDAD' 
@@ -122,7 +116,7 @@ export default function TruthOrDareGame({ players, onBackToMenu }: TruthOrDareGa
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={() => !lastAction && handleAction('RETO')}
+          onClick={() => !lastAction && onAction('RETO')}
           disabled={!!lastAction}
           className={`group relative overflow-hidden p-8 rounded-[2.5rem] flex flex-col items-center gap-4 transition-all border-2 ${
             lastAction === 'RETO' 
@@ -142,7 +136,7 @@ export default function TruthOrDareGame({ players, onBackToMenu }: TruthOrDareGa
         </motion.button>
       </div>
 
-      {/* Result Area (Placeholder) */}
+      {/* Result Area */}
       <div className="glass-panel p-6 rounded-3xl bg-white/5 border border-white/10 text-center">
         <AnimatePresence mode="wait">
           {lastAction ? (
@@ -166,7 +160,7 @@ export default function TruthOrDareGame({ players, onBackToMenu }: TruthOrDareGa
               className="py-4"
             >
               <p className="text-sm font-medium text-gray-500 italic">
-                Esperando lógica de preguntas...
+                Esperando elección...
               </p>
             </motion.div>
           )}

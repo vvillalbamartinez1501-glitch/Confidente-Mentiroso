@@ -53,59 +53,38 @@ const SCORING_DESCRIPTIONS: Record<ScoringMode, { title: string, desc: string, i
 };
 
 export default function ConfidenteMentirosoPage() {
-  const sessionManager = useGlobalContext();
-  const game = useGameLogic(sessionManager);
-  const [showScoreboard, setShowScoreboard] = useState(false);
-  const [isInstructionsOpen, setIsInstructionsOpen] = useState(false);
+  const game = useGameLogic();
+  const [isInstructionsOpen, setIsInstructionsOpen] = React.useState(false);
 
-  // Reset showRoles when moving to assignment state (now handled via game.toggleShowRoles)
-  React.useEffect(() => {
-    if (game.gameState === 'assignment' && game.isHost) {
-      game.toggleShowRoles(false);
-    }
-  }, [game.gameState, game.isHost]);
-
-  // Helper to handle player additions/removals in lobby
-  const handleAddPlayer = (name: string) => {
-    const newPlayer: Player = {
-      id: crypto.randomUUID(),
-      name,
-      score: 0,
-      hp: 5,
-      isEliminated: false,
-      isManualSpectator: false
-    };
-    sessionManager.updateActiveSessionPlayers([...(sessionManager.activeSession?.players || []), newPlayer]);
+  const handleAddPlayer = () => {
+    game.updatePlayers([
+      ...game.players,
+      { id: crypto.randomUUID(), name: `Jugador ${game.players.length + 1}`, score: 0, hp: 5, isEliminated: false, isManualSpectator: false }
+    ]);
   };
 
   const handleRemovePlayer = (id: string) => {
-    sessionManager.updateActiveSessionPlayers(
-      (sessionManager.activeSession?.players || []).filter(p => p.id !== id)
-    );
+    game.updatePlayers(game.players.filter(p => p.id !== id));
   };
 
   const handleUpdatePlayer = (id: string, name: string) => {
-    sessionManager.updateActiveSessionPlayers(
-      (sessionManager.activeSession?.players || []).map(p => p.id === id ? { ...p, name } : p)
-    );
+    game.updatePlayers(game.players.map(p => p.id === id ? { ...p, name } : p));
   };
 
   const handleToggleSpectator = (id: string) => {
-    sessionManager.updateActiveSessionPlayers(
-      (sessionManager.activeSession?.players || []).map(p => 
-        p.id === id ? { ...p, isManualSpectator: !p.isManualSpectator } : p
-      )
-    );
+    game.updatePlayers(game.players.map(p => 
+      p.id === id ? { ...p, isManualSpectator: !p.isManualSpectator } : p
+    ));
   };
 
   const handleReorder = (index: number, direction: 'up' | 'down') => {
-    const players = [...(sessionManager.activeSession?.players || [])];
+    const players = [...game.players];
     const newIndex = direction === 'up' ? index - 1 : index + 1;
     if (newIndex < 0 || newIndex >= players.length) return;
     
     const [movedPlayer] = players.splice(index, 1);
     players.splice(newIndex, 0, movedPlayer);
-    sessionManager.updateActiveSessionPlayers(players);
+    game.updatePlayers(players);
   };
 
   return (
