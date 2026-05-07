@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Github } from 'lucide-react';
+import { Code, ExternalLink } from 'lucide-react';
 
 export function Footer() {
   return (
@@ -26,11 +26,12 @@ export function Footer() {
           rel="noopener noreferrer"
           className="group flex items-center gap-2 px-4 py-2 bg-white/[0.03] hover:bg-white/[0.08] border border-white/5 hover:border-white/10 rounded-full backdrop-blur-md transition-all duration-300"
         >
-          <Github className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" />
+          <Code className="w-4 h-4 text-gray-400 group-hover:text-blue-400 transition-colors" />
           <span className="text-xs font-black tracking-tight text-gray-400 group-hover:text-white transition-colors relative">
             vvillalbamartinez1501-glitch
             <span className="absolute -bottom-0.5 left-0 w-0 h-[1px] bg-white transition-all duration-300 group-hover:w-full" />
           </span>
+          <ExternalLink className="w-3 h-3 text-gray-600 group-hover:text-gray-400 transition-colors" />
         </a>
       </div>
       

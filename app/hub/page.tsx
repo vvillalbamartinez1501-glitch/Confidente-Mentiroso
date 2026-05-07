@@ -9,9 +9,9 @@ import {
   Search, Loader2
 } from 'lucide-react';
 import Link from 'next/link';
-import { useGlobalContext } from '../context/GlobalContext';
-import { GameInfo, ConnectionMode } from '../lib/types';
-import { Footer } from '../components/Footer';
+import { useGlobalContext } from '../../context/GlobalContext';
+import { GameInfo, ConnectionMode } from '../../lib/types';
+import { Footer } from '../../components/Footer';
 
 const GAMES: GameInfo[] = [
   {
