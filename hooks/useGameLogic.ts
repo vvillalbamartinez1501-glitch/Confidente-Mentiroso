@@ -184,7 +184,7 @@ export function useGameLogic() {
       diviner.playerId,
       liar.playerId,
       targetPlayerId,
-      activeSession.scoringMode
+      activeSession?.scoringMode || 'ORIGINAL'
     );
     
     updatePhase('result', { votedPlayerId: targetPlayerId });
