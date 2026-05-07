@@ -24,9 +24,9 @@ interface GlobalContextType {
   onlineError: string | null;
   createRoom: (hostName: string) => Promise<any>;
   joinRoom: (code: string, playerName: string) => Promise<any>;
-  kickPlayer: (roomId: string, playerId: string) => Promise<void>;
-  updateGameState: (roomId: string, newState: any) => Promise<void>;
-  leaveRoom: (roomId: string, playerId: string) => Promise<void>;
+  kickPlayer: (playerId: string) => Promise<void>;
+  updateGameState: (newState: any) => Promise<void>;
+  leaveRoom: () => Promise<void>;
 }
 
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
