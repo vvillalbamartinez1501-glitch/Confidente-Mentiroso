@@ -69,7 +69,7 @@ export interface GameInfo {
   id: string;
   title: string;
   description: string;
-  icon: string;
+  icon: any;
   color: string;
   isNew?: boolean;
   isBeta?: boolean;

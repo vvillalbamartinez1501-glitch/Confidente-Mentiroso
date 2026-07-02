@@ -6,7 +6,7 @@ import {
   Gamepad2, Users, LayoutGrid, Plus, 
   ArrowRight, Star, Zap, Ghost, EyeOff,
   Crown, LogIn, LogOut, Globe, Smartphone,
-  Search, Loader2
+  Search, Loader2, Dices
 } from 'lucide-react';
 import Link from 'next/link';
 import { useGlobalContext } from '../../context/GlobalContext';
@@ -46,6 +46,14 @@ const GAMES: GameInfo[] = [
     description: 'El clásico juego de compromisos y secretos para romper el hielo.',
     icon: '🔥',
     color: 'from-orange-600 to-red-700',
+    multiplayer: true
+  },
+  {
+    id: 'random-number',
+    title: 'Números Aleatorios',
+    description: 'Generador de números con ajustes personalizables. Ideal para sorteos o pruebas.',
+    icon: <Dices className="w-8 h-8 text-white" />,
+    color: 'from-amber-500 to-orange-600',
     multiplayer: true
   }
 ];
@@ -198,7 +206,7 @@ export default function GameHub() {
               transition={{ delay: i * 0.1 }}
             >
               <Link 
-                href={game.id === 'confidente-mentiroso' || game.id === 'impostor' || game.id === 'truth-or-dare' ? `/juego/${game.id}` : '#'}
+                href={game.id === 'confidente-mentiroso' || game.id === 'impostor' || game.id === 'truth-or-dare' || game.id === 'random-number' ? `/juego/${game.id}` : '#'}
                 className={`group relative flex flex-col h-full bg-gradient-to-br ${game.color} rounded-[2.5rem] p-8 overflow-hidden shadow-2xl hover:scale-[1.03] transition-all duration-500 border border-white/10`}
               >
                 <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:rotate-12 transition-transform duration-700">
