@@ -121,35 +121,7 @@ export default function TriviaCaoticaGame({
           }
           setIsSpinning(false);
 
-          // If Host / Local, transition to READING_QUESTION after a short delay
-          if (isAuthority) {
-            setTimeout(() => {
-              const activeQuestion = localQuestions[currentQuestionIndex];
-              const modifier = CHAOS_MODIFIERS.find(m => m.id === rolledModifierId)!;
-              
-              // Strip correct answer for Guests
-              const strippedQuestion: Omit<TriviaQuestion, 'correct_answer'> = {
-                id: activeQuestion.id,
-                text: activeQuestion.text,
-                type: activeQuestion.type,
-                options: activeQuestion.options,
-                mediaUrl: activeQuestion.mediaUrl
-              };
-
-              const nextPhase: TriviaPhase = 'READING_QUESTION';
-              setCurrentQuestion(strippedQuestion);
-              setCurrentModifier(modifier);
-              setTimeLeft(4); // 4 seconds to read
-
-              pushState({
-                phase: nextPhase,
-                currentQuestion: strippedQuestion,
-                currentModifier: modifier,
-                timeLeft: 4,
-                correctAnswer: '' // clear correct answer
-              });
-            }, 1200);
-          }
+          // Spin completed! Host or Local player can now advance manually
         }
       };
 
@@ -255,6 +227,36 @@ export default function TriviaCaoticaGame({
     } catch (err) {
       alert('Error al inicializar el juego. Por favor intenta de nuevo.');
     }
+  };
+
+  const handleStartTriviaRound = () => {
+    if (!isAuthority || !rolledModifierId) return;
+
+    const activeQuestion = localQuestions[currentQuestionIndex];
+    const modifier = CHAOS_MODIFIERS.find(m => m.id === rolledModifierId)!;
+
+    // Strip correct answer for Guests
+    const strippedQuestion: Omit<TriviaQuestion, 'correct_answer'> = {
+      id: activeQuestion.id,
+      text: activeQuestion.text,
+      type: activeQuestion.type,
+      options: activeQuestion.options,
+      mediaUrl: activeQuestion.mediaUrl
+    };
+
+    const nextPhase: TriviaPhase = 'READING_QUESTION';
+    setCurrentQuestion(strippedQuestion);
+    setCurrentModifier(modifier);
+    setTimeLeft(4); // 4 seconds to read
+
+    setPhase(nextPhase);
+    pushState({
+      phase: nextPhase,
+      currentQuestion: strippedQuestion,
+      currentModifier: modifier,
+      timeLeft: 4,
+      correctAnswer: '' // clear correct answer
+    });
   };
 
   const handleTimeExpired = async () => {
@@ -522,6 +524,24 @@ export default function TriviaCaoticaGame({
             <p className="text-emerald-500 text-[10px] font-black uppercase tracking-wider animate-pulse">Girando la Ruleta del Caos...</p>
           )}
         </div>
+
+        {!isSpinning && (
+          <div className="mt-4">
+            {isAuthority ? (
+              <button
+                onClick={handleStartTriviaRound}
+                className="w-full py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-black uppercase tracking-widest text-xs rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2 hover:scale-[1.02]"
+              >
+                <Play className="w-4 h-4 fill-white text-white" />
+                Comenzar Pregunta
+              </button>
+            ) : (
+              <div className="py-3 px-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-bold uppercase tracking-wider text-[10px] rounded-2xl animate-pulse">
+                Esperando a que el Host inicie la pregunta...
+              </div>
+            )}
+          </div>
+        )}
       </div>
     );
   };
