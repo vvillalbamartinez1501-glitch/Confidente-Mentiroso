@@ -153,21 +153,29 @@ export default function RandomNumberGame({
   const getNumberStyle = (qty: number): React.CSSProperties => {
     if (qty <= 1) {
       return {
-        '--num-size': 'min(75vw, 55vh)',
-        '--num-size-sm': 'min(75vw, 60vh)',
-        '--num-size-md': 'min(75vw, 65vh)',
-        '--num-size-lg': 'min(75vw, 70vh)',
+        '--num-size': 'min(95vw, 70vh)',
+        '--num-size-sm': 'min(95vw, 70vh)',
+        '--num-size-md': 'min(95vw, 75vh)',
+        '--num-size-lg': 'min(95vw, 80vh)',
       } as React.CSSProperties;
     }
     if (qty <= 2) {
       return {
-        '--num-size': 'min(45vw, 45vh)',
-        '--num-size-sm': 'min(45vw, 45vh)',
-        '--num-size-md': 'min(45vw, 50vh)',
-        '--num-size-lg': 'min(45vw, 50vh)',
+        '--num-size': 'min(65vw, 55vh)',
+        '--num-size-sm': 'min(65vw, 55vh)',
+        '--num-size-md': 'min(65vw, 60vh)',
+        '--num-size-lg': 'min(65vw, 60vh)',
       } as React.CSSProperties;
     }
     if (qty <= 4) {
+      return {
+        '--num-size': 'min(45vw, 40vh)',
+        '--num-size-sm': 'min(45vw, 40vh)',
+        '--num-size-md': 'min(45vw, 45vh)',
+        '--num-size-lg': 'min(45vw, 45vh)',
+      } as React.CSSProperties;
+    }
+    if (qty <= 9) {
       return {
         '--num-size': 'min(30vw, 30vh)',
         '--num-size-sm': 'min(30vw, 30vh)',
@@ -175,19 +183,11 @@ export default function RandomNumberGame({
         '--num-size-lg': 'min(30vw, 35vh)',
       } as React.CSSProperties;
     }
-    if (qty <= 9) {
-      return {
-        '--num-size': 'min(22vw, 22vh)',
-        '--num-size-sm': 'min(22vw, 22vh)',
-        '--num-size-md': 'min(22vw, 25vh)',
-        '--num-size-lg': 'min(22vw, 25vh)',
-      } as React.CSSProperties;
-    }
     return {
-      '--num-size': 'min(15vw, 15vh)',
-      '--num-size-sm': 'min(15vw, 15vh)',
-      '--num-size-md': 'min(15vw, 18vh)',
-      '--num-size-lg': 'min(15vw, 18vh)',
+      '--num-size': 'min(20vw, 20vh)',
+      '--num-size-sm': 'min(20vw, 20vh)',
+      '--num-size-md': 'min(20vw, 22vh)',
+      '--num-size-lg': 'min(20vw, 22vh)',
     } as React.CSSProperties;
   };
 
@@ -267,7 +267,7 @@ export default function RandomNumberGame({
                     delay: isAnimating ? 0 : i * 0.05 
                   }}
                   style={getNumberStyle(gameState.count)}
-                  className="font-black text-white leading-none drop-shadow-[0_0_35px_rgba(255,255,255,0.2)] font-mono select-none px-4 text-[var(--num-size)] sm:text-[var(--num-size-sm)] md:text-[var(--num-size-md)] lg:text-[var(--num-size-lg)]"
+                  className="font-black text-white leading-none drop-shadow-[0_0_35px_rgba(255,255,255,0.2)] font-mono select-none px-2 text-[var(--num-size)] sm:text-[var(--num-size-sm)] md:text-[var(--num-size-md)] lg:text-[var(--num-size-lg)]"
                 >
                   {num}
                 </motion.div>
