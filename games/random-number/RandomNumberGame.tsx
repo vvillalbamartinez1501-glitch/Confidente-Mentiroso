@@ -151,18 +151,18 @@ export default function RandomNumberGame({
 
   // Responsive font sizes for numbers based on the count
   const getNumberSizeClass = (qty: number) => {
-    if (qty <= 1) return 'text-[9rem] sm:text-[14rem]';
-    if (qty <= 2) return 'text-7xl sm:text-9xl';
-    if (qty <= 4) return 'text-6xl sm:text-7xl';
-    if (qty <= 9) return 'text-5xl sm:text-6xl';
-    return 'text-3xl sm:text-4xl';
+    if (qty <= 1) return 'text-[15rem] sm:text-[22rem] md:text-[28rem]';
+    if (qty <= 2) return 'text-[10rem] sm:text-[14rem] md:text-[18rem]';
+    if (qty <= 4) return 'text-8xl sm:text-[10rem] md:text-[12rem]';
+    if (qty <= 9) return 'text-6xl sm:text-8xl md:text-9xl';
+    return 'text-4xl sm:text-5xl md:text-6xl';
   };
 
   const showSettingsButton = !isOnline || isHost;
   const showGenerateButton = !isOnline || isHost;
 
   return (
-    <div className="w-full max-w-xl flex flex-col justify-between min-h-[70vh] gap-8 relative z-10 px-4">
+    <div className="w-full max-w-4xl flex flex-col justify-between min-h-[70vh] gap-8 relative z-10 px-4">
       {/* Top Header Controls */}
       <div className="flex justify-between items-center w-full">
         <button
@@ -194,7 +194,7 @@ export default function RandomNumberGame({
       </div>
 
       {/* Main Large Display Area */}
-      <div className="flex-1 flex flex-col items-center justify-center min-h-[350px]">
+      <div className="flex-1 flex flex-col items-center justify-center min-h-[450px]">
         <AnimatePresence mode="wait">
           {displayNumbers.length === 0 ? (
             <motion.div
