@@ -1,0 +1,42 @@
+[
+  {
+    "id": "hist-1",
+    "text": "¿Quién fue el primer emperador romano?",
+    "type": "multiple",
+    "options": ["Julio César", "César Augusto", "Nerón", "Marco Aurelio"],
+    "correct_answer": "César Augusto"
+  },
+  {
+    "id": "hist-2",
+    "text": "La Primera Guerra Mundial comenzó en 1914.",
+    "type": "boolean",
+    "options": ["Verdadero", "Falso"],
+    "correct_answer": "Verdadero"
+  },
+  {
+    "id": "hist-3",
+    "text": "¿En qué año se descubrió América?",
+    "type": "input",
+    "correct_answer": "1492"
+  },
+  {
+    "id": "hist-4",
+    "text": "¿Qué civilización construyó las pirámides de Giza?",
+    "type": "multiple",
+    "options": ["Los Mayas", "Los Romanos", "Los Egipcios", "Los Griegos"],
+    "correct_answer": "Los Egipcios"
+  },
+  {
+    "id": "hist-5",
+    "text": "El muro de Berlín cayó en el año 1989.",
+    "type": "boolean",
+    "options": ["Verdadero", "Falso"],
+    "correct_answer": "Verdadero"
+  },
+  {
+    "id": "hist-6",
+    "text": "¿Cuál es la capital del antiguo Imperio Inca?",
+    "type": "input",
+    "correct_answer": "Cusco"
+  }
+]

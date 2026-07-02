@@ -1,0 +1,42 @@
+[
+  {
+    "id": "meme-1",
+    "text": "¿Qué perra de raza Shiba Inu inspiró el meme de Doge?",
+    "type": "multiple",
+    "options": ["Cheems", "Kabosu", "Walter", "Tofu"],
+    "correct_answer": "Kabosu"
+  },
+  {
+    "id": "meme-2",
+    "text": "El meme 'Hide the Pain Harold' muestra a un hombre mayor con una sonrisa que parece fingida o dolorosa.",
+    "type": "boolean",
+    "options": ["Verdadero", "Falso"],
+    "correct_answer": "Verdadero"
+  },
+  {
+    "id": "meme-3",
+    "text": "¿Cuál es el nombre del ogro verde protagonista del famoso meme '... is love, ... is life'?",
+    "type": "input",
+    "correct_answer": "Shrek"
+  },
+  {
+    "id": "meme-4",
+    "text": "¿Qué canción se utiliza tradicionalmente para hacer un 'Rickroll'?",
+    "type": "multiple",
+    "options": ["All Star", "Never Gonna Give You Up", "Dragostea Din Tei", "Sandstorm"],
+    "correct_answer": "Never Gonna Give You Up"
+  },
+  {
+    "id": "meme-5",
+    "text": "El meme de Drake rechazando algo y luego aceptándolo proviene del videoclip de 'Hotline Bling'.",
+    "type": "boolean",
+    "options": ["Verdadero", "Falso"],
+    "correct_answer": "Verdadero"
+  },
+  {
+    "id": "meme-6",
+    "text": "¿Cómo se llama el gato gruñón de internet que se hizo viral por su expresión amargada?",
+    "type": "input",
+    "correct_answer": "Grumpy Cat"
+  }
+]

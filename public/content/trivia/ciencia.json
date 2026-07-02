@@ -1,0 +1,42 @@
+[
+  {
+    "id": "sci-1",
+    "text": "¿Cuál es el elemento químico más abundante en el universo?",
+    "type": "multiple",
+    "options": ["Oxígeno", "Helio", "Hidrógeno", "Carbono"],
+    "correct_answer": "Hidrógeno"
+  },
+  {
+    "id": "sci-2",
+    "text": "El sonido viaja más rápido en el agua que en el aire.",
+    "type": "boolean",
+    "options": ["Verdadero", "Falso"],
+    "correct_answer": "Verdadero"
+  },
+  {
+    "id": "sci-3",
+    "text": "¿Qué gas respiran las plantas y expulsan los humanos?",
+    "type": "input",
+    "correct_answer": "Dióxido de carbono"
+  },
+  {
+    "id": "sci-4",
+    "text": "¿Cuál de los siguientes planetas es conocido como el planeta rojo?",
+    "type": "multiple",
+    "options": ["Venus", "Júpiter", "Saturno", "Marte"],
+    "correct_answer": "Marte"
+  },
+  {
+    "id": "sci-5",
+    "text": "Los electrones tienen carga eléctrica positiva.",
+    "type": "boolean",
+    "options": ["Verdadero", "Falso"],
+    "correct_answer": "Falso"
+  },
+  {
+    "id": "sci-6",
+    "text": "¿Cuál es el planeta más grande de nuestro sistema solar?",
+    "type": "input",
+    "correct_answer": "Júpiter"
+  }
+]
