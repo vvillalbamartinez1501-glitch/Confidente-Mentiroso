@@ -13,9 +13,12 @@ interface PlayerLobbyProps {
   onToggleSpectator: (id: string) => void;
   onReorder: (index: number, direction: 'up' | 'down') => void;
   onContinue: () => void;
+  minPlayers?: number;
 }
 
-export function PlayerLobby({ players, onAdd, onRemove, onUpdate, onToggleSpectator, onReorder, onContinue }: PlayerLobbyProps) {
+export function PlayerLobby({ 
+  players, onAdd, onRemove, onUpdate, onToggleSpectator, onReorder, onContinue, minPlayers = 3 
+}: PlayerLobbyProps) {
   const [newName, setNewName] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [tempName, setTempName] = useState('');
@@ -160,15 +163,15 @@ export function PlayerLobby({ players, onAdd, onRemove, onUpdate, onToggleSpecta
 
       <button 
         onClick={onContinue}
-        disabled={players.length < 3}
+        disabled={players.length < minPlayers}
         className="mt-4 py-5 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl font-black text-lg disabled:opacity-30 hover:shadow-[0_0_30px_rgba(59,130,246,0.4)] transition-all flex justify-center items-center gap-3 uppercase tracking-widest text-white"
       >
         <span>Continuar</span>
         <Check className="w-6 h-6" />
       </button>
-      {players.length < 3 && (
+      {players.length < minPlayers && (
         <p className="text-center text-[10px] text-rose-400 font-bold uppercase tracking-widest animate-pulse">
-          Se requieren al menos 3 jugadores
+          Se requieren al menos {minPlayers} {minPlayers === 1 ? 'jugador' : 'jugadores'}
         </p>
       )}
     </div>

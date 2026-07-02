@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useGameState } from '../../../hooks/useGameState';
 import { PlayerLobby } from '../../../components/PlayerLobby';
+import { OnlinePlayerLobby } from '../../../components/OnlinePlayerLobby';
 import { SessionHeader } from '../../../components/SessionHeader';
 import { SessionPicker } from '../../../components/SessionPicker';
 import TriviaCaoticaGame from '../../../games/trivia-caotica/TriviaCaoticaGame';
@@ -15,7 +16,7 @@ export default function TriviaCaoticaPage() {
     isOnline, isHost, players, onlineGameState, 
     updatePlayers, updateGameState, activeSession,
     setActiveSessionId, sessions, createSession, deleteSession,
-    playerId, updateScoring
+    playerId, updateScoring, kickPlayer, leaveRoom
   } = useGameState();
 
   const [phase, setPhase] = useState<'lobby' | 'playing'>('lobby');
@@ -113,30 +114,48 @@ export default function TriviaCaoticaPage() {
             exit={{ opacity: 0, x: -20 }}
             className="w-full max-w-md z-10"
           >
-            <PlayerLobby 
-              players={players}
-              onAdd={(name) => updatePlayers([...players, { id: crypto.randomUUID(), name, score: 0, hp: 5, isEliminated: false, isManualSpectator: false }])}
-              onRemove={(id) => updatePlayers(players.filter(p => p.id !== id))}
-              onUpdate={(id, name) => updatePlayers(players.map(p => p.id === id ? { ...p, name } : p))}
-              onReorder={(index, direction) => {
-                const newPlayers = [...players];
-                const newIndex = direction === 'up' ? index - 1 : index + 1;
-                if (newIndex < 0 || newIndex >= newPlayers.length) return;
-                const [movedPlayer] = newPlayers.splice(index, 1);
-                newPlayers.splice(newIndex, 0, movedPlayer);
-                updatePlayers(newPlayers);
-              }}
-              onContinue={handleStartGame}
-              onToggleSpectator={(id) => {
-                updatePlayers(players.map(p => p.id === id ? { ...p, isManualSpectator: !p.isManualSpectator } : p));
-              }}
-            />
-            <button 
-              onClick={() => setActiveSessionId(null)}
-              className="mt-6 w-full text-gray-500 font-bold uppercase tracking-widest text-[10px] hover:text-white transition-colors"
-            >
-              Cambiar Sesión
-            </button>
+            {isOnline ? (
+              <OnlinePlayerLobby 
+                roomCode={activeSession?.roomCode || ''}
+                players={players}
+                isHost={isHost}
+                onKick={kickPlayer}
+                onLeave={async () => {
+                  await leaveRoom();
+                  setActiveSessionId(null);
+                }}
+                onStart={handleStartGame}
+                minPlayers={1}
+              />
+            ) : (
+              <PlayerLobby 
+                players={players}
+                onAdd={(name) => updatePlayers([...players, { id: crypto.randomUUID(), name, score: 0, hp: 5, isEliminated: false, isManualSpectator: false }])}
+                onRemove={(id) => updatePlayers(players.filter(p => p.id !== id))}
+                onUpdate={(id, name) => updatePlayers(players.map(p => p.id === id ? { ...p, name } : p))}
+                onReorder={(index, direction) => {
+                  const newPlayers = [...players];
+                  const newIndex = direction === 'up' ? index - 1 : index + 1;
+                  if (newIndex < 0 || newIndex >= newPlayers.length) return;
+                  const [movedPlayer] = newPlayers.splice(index, 1);
+                  newPlayers.splice(newIndex, 0, movedPlayer);
+                  updatePlayers(newPlayers);
+                }}
+                onContinue={handleStartGame}
+                onToggleSpectator={(id) => {
+                  updatePlayers(players.map(p => p.id === id ? { ...p, isManualSpectator: !p.isManualSpectator } : p));
+                }}
+                minPlayers={1}
+              />
+            )}
+            {!isOnline && (
+              <button 
+                onClick={() => setActiveSessionId(null)}
+                className="mt-6 w-full text-gray-500 font-bold uppercase tracking-widest text-[10px] hover:text-white transition-colors"
+              >
+                Cambiar Sesión
+              </button>
+            )}
           </motion.div>
         ) : (
           <motion.div 

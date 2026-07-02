@@ -15,10 +15,11 @@ interface OnlinePlayerLobbyProps {
   onKick?: (id: string) => void;
   onLeave: () => void;
   onStart: () => void;
+  minPlayers?: number;
 }
 
 export function OnlinePlayerLobby({ 
-  roomCode, players, isHost, onKick, onLeave, onStart 
+  roomCode, players, isHost, onKick, onLeave, onStart, minPlayers = 3
 }: OnlinePlayerLobbyProps) {
   
   const copyCode = () => {
@@ -91,7 +92,7 @@ export function OnlinePlayerLobby({
             </motion.div>
           ))}
           
-          {players.length < 3 && (
+          {players.length < minPlayers && (
             <div className="flex-1 flex flex-col items-center justify-center py-8 border-2 border-dashed border-white/5 rounded-2xl">
               <Loader2 className="w-6 h-6 text-gray-600 animate-spin mb-2" />
               <p className="text-[10px] text-gray-600 font-bold uppercase tracking-widest text-center px-8">
@@ -114,7 +115,7 @@ export function OnlinePlayerLobby({
         {isHost ? (
           <button 
             onClick={onStart}
-            disabled={players.length < 3}
+            disabled={players.length < minPlayers}
             className="py-4 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl font-black text-xs disabled:opacity-30 hover:shadow-[0_0_30px_rgba(59,130,246,0.3)] transition-all flex justify-center items-center gap-2 uppercase tracking-widest text-white"
           >
             <Check className="w-4 h-4" />
