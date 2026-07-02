@@ -35,8 +35,68 @@
   },
   {
     "id": "meme-6",
-    "text": "¿Cómo se llama el gato gruñón de internet que se hizo viral por su expresión amargada?",
+    "text": "¿Cómo se llama la famosa gata amargada de internet que se hizo viral por su expresión de enfado?",
     "type": "input",
     "correct_answer": "Grumpy Cat"
+  },
+  {
+    "id": "meme-7",
+    "text": "¿Cuál es el cuerpo del famoso gato espacial animado 'Nyan Cat'?",
+    "type": "multiple",
+    "options": ["Una tostada Pop-Tart", "Un donut", "Una galleta Oreo", "Un trozo de queso"],
+    "correct_answer": "Una tostada Pop-Tart"
+  },
+  {
+    "id": "meme-8",
+    "text": "El meme del 'Novio Distraído' muestra a un hombre mirando a otra mujer mientras camina de la mano con su novia.",
+    "type": "boolean",
+    "options": ["Verdadero", "Falso"],
+    "correct_answer": "Verdadero"
+  },
+  {
+    "id": "meme-9",
+    "text": "¿De qué personaje de El Señor de los Anillos proviene la frase del meme 'No se entra simplemente a Mordor'?",
+    "type": "input",
+    "correct_answer": "Boromir"
+  },
+  {
+    "id": "meme-10",
+    "text": "¿Qué animal confunde el personaje de anime en el meme '¿Es esto una paloma?'?",
+    "type": "multiple",
+    "options": ["Una mariposa", "Una abeja", "Un murciélago", "Un pájaro de juguete"],
+    "correct_answer": "Una mariposa"
+  },
+  {
+    "id": "meme-11",
+    "text": "El meme del perro 'This is Fine' muestra al animal sentado pacíficamente mientras su habitación se incendia.",
+    "type": "boolean",
+    "options": ["Verdadero", "Falso"],
+    "correct_answer": "Verdadero"
+  },
+  {
+    "id": "meme-12",
+    "text": "¿Qué tipo de reptil es el famoso protagonista del meme de los tambores 'Ba Dum Tss'?",
+    "type": "input",
+    "correct_answer": "Dinosaurio"
+  },
+  {
+    "id": "meme-13",
+    "text": "¿En qué plataforma social de videos de 6 segundos nacieron memes icónicos como 'Road work ahead?' o 'Look at all those chickens!'?",
+    "type": "multiple",
+    "options": ["TikTok", "Vine", "Dubsmash", "YouTube Shorts"],
+    "correct_answer": "Vine"
+  },
+  {
+    "id": "meme-14",
+    "text": "El meme del 'Esqueleto bailando' o 'Spooky Scary Skeletons' se asocia tradicionalmente con la época de Halloween.",
+    "type": "boolean",
+    "options": ["Verdadero", "Falso"],
+    "correct_answer": "Verdadero"
+  },
+  {
+    "id": "meme-15",
+    "text": "¿Cómo se llama el meme del niño rubio con brackets al que todo le sale mal?",
+    "type": "input",
+    "correct_answer": "Bad Luck Brian"
   }
 ]

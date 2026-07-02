@@ -15,7 +15,7 @@
   },
   {
     "id": "sci-3",
-    "text": "¿Qué gas respiran las plantas y expulsan los humanos?",
+    "text": "¿Qué gas respiran las plantas y expulsan los seres humanos?",
     "type": "input",
     "correct_answer": "Dióxido de carbono"
   },
@@ -38,5 +38,65 @@
     "text": "¿Cuál es el planeta más grande de nuestro sistema solar?",
     "type": "input",
     "correct_answer": "Júpiter"
+  },
+  {
+    "id": "sci-7",
+    "text": "¿Cuál es el orgánulo celular conocido como la 'central de energía' de la célula?",
+    "type": "multiple",
+    "options": ["Ribosoma", "Mitocondria", "Aparato de Golgi", "Núcleo"],
+    "correct_answer": "Mitocondria"
+  },
+  {
+    "id": "sci-8",
+    "text": "El cero absoluto equivale aproximadamente a -273 grados Celsius.",
+    "type": "boolean",
+    "options": ["Verdadero", "Falso"],
+    "correct_answer": "Verdadero"
+  },
+  {
+    "id": "sci-9",
+    "text": "¿Cuál es el símbolo químico del Oro en la tabla periódica?",
+    "type": "input",
+    "correct_answer": "Au"
+  },
+  {
+    "id": "sci-10",
+    "text": "¿Aproximadamente cuánto tiempo tarda la luz del Sol en llegar a la Tierra?",
+    "type": "multiple",
+    "options": ["8 segundos", "8 minutos", "8 horas", "8 días"],
+    "correct_answer": "8 minutos"
+  },
+  {
+    "id": "sci-11",
+    "text": "El diamante es una forma cristalina pura del elemento Carbono.",
+    "type": "boolean",
+    "options": ["Verdadero", "Falso"],
+    "correct_answer": "Verdadero"
+  },
+  {
+    "id": "sci-12",
+    "text": "¿A qué temperatura hierve el agua pura a nivel del mar (en grados Celsius)?",
+    "type": "input",
+    "correct_answer": "100"
+  },
+  {
+    "id": "sci-13",
+    "text": "¿Qué científico propuso la Teoría de la Relatividad General?",
+    "type": "multiple",
+    "options": ["Isaac Newton", "Nikola Tesla", "Albert Einstein", "Marie Curie"],
+    "correct_answer": "Albert Einstein"
+  },
+  {
+    "id": "sci-14",
+    "text": "La velocidad de la luz en el vacío es de aproximadamente 300.000 kilómetros por segundo.",
+    "type": "boolean",
+    "options": ["Verdadero", "Falso"],
+    "correct_answer": "Verdadero"
+  },
+  {
+    "id": "sci-15",
+    "text": "¿Cuál es la fórmula química del agua?",
+    "type": "input",
+    "correct_answer": "H2O"
   }
 ]

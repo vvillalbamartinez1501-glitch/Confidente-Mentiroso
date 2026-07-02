@@ -15,7 +15,7 @@
   },
   {
     "id": "hist-3",
-    "text": "¿En qué año se descubrió América?",
+    "text": "¿En qué año llegó Cristóbal Colón a América?",
     "type": "input",
     "correct_answer": "1492"
   },
@@ -35,8 +35,68 @@
   },
   {
     "id": "hist-6",
-    "text": "¿Cuál es la capital del antiguo Imperio Inca?",
+    "text": "¿Cuál era la capital del Imperio Inca?",
     "type": "input",
     "correct_answer": "Cusco"
+  },
+  {
+    "id": "hist-7",
+    "text": "¿De qué origen era Cleopatra VII, la famosa reina de Egipto?",
+    "type": "multiple",
+    "options": ["Egipcio", "Romano", "Griego", "Persa"],
+    "correct_answer": "Griego"
+  },
+  {
+    "id": "hist-8",
+    "text": "La Revolución Francesa comenzó en el año 1789.",
+    "type": "boolean",
+    "options": ["Verdadero", "Falso"],
+    "correct_answer": "Verdadero"
+  },
+  {
+    "id": "hist-9",
+    "text": "¿En qué año se firmó la Declaración de Independencia de los Estados Unidos?",
+    "type": "input",
+    "correct_answer": "1776"
+  },
+  {
+    "id": "hist-10",
+    "text": "¿Quién fue el líder militar y político francés que se coronó emperador en 1804?",
+    "type": "multiple",
+    "options": ["Luis XIV", "Napoleón Bonaparte", "Carlos de Gaulle", "Maximilien Robespierre"],
+    "correct_answer": "Napoleón Bonaparte"
+  },
+  {
+    "id": "hist-11",
+    "text": "La peste negra del siglo XIV mató a más de un tercio de la población europea.",
+    "type": "boolean",
+    "options": ["Verdadero", "Falso"],
+    "correct_answer": "Verdadero"
+  },
+  {
+    "id": "hist-12",
+    "text": "¿En qué batalla fue derrotado definitivamente Napoleón Bonaparte?",
+    "type": "input",
+    "correct_answer": "Waterloo"
+  },
+  {
+    "id": "hist-13",
+    "text": "¿Qué tratado de paz puso fin a la Primera Guerra Mundial?",
+    "type": "multiple",
+    "options": ["Tratado de Versalles", "Tratado de Utrecht", "Tratado de Tordesillas", "Pacto de Varsovia"],
+    "correct_answer": "Tratado de Versalles"
+  },
+  {
+    "id": "hist-14",
+    "text": "El imperio bizantino cayó ante los otomanos en el año 1453.",
+    "type": "boolean",
+    "options": ["Verdadero", "Falso"],
+    "correct_answer": "Verdadero"
+  },
+  {
+    "id": "hist-15",
+    "text": "¿Quién inventó la imprenta moderna en Europa a mediados del siglo XV?",
+    "type": "input",
+    "correct_answer": "Johannes Gutenberg"
   }
 ]
