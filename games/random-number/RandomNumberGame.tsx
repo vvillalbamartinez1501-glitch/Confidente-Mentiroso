@@ -233,7 +233,7 @@ export default function RandomNumberGame({
                     damping: 20, 
                     delay: isAnimating ? 0 : i * 0.05 
                   }}
-                  className={`font-black text-transparent bg-clip-text bg-gradient-to-br from-amber-300 via-amber-400 to-orange-500 leading-none drop-shadow-[0_0_35px_rgba(245,158,11,0.45)] font-mono select-none px-4 ${getNumberSizeClass(
+                  className={`font-black text-white leading-none drop-shadow-[0_0_35px_rgba(255,255,255,0.2)] font-mono select-none px-4 ${getNumberSizeClass(
                     gameState.count
                   )}`}
                 >
