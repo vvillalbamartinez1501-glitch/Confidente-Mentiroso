@@ -151,11 +151,11 @@ export default function RandomNumberGame({
 
   // Responsive font sizes for numbers based on the count
   const getNumberSizeClass = (qty: number) => {
-    if (qty <= 1) return 'text-[15rem] sm:text-[22rem] md:text-[28rem]';
-    if (qty <= 2) return 'text-[10rem] sm:text-[14rem] md:text-[18rem]';
-    if (qty <= 4) return 'text-8xl sm:text-[10rem] md:text-[12rem]';
-    if (qty <= 9) return 'text-6xl sm:text-8xl md:text-9xl';
-    return 'text-4xl sm:text-5xl md:text-6xl';
+    if (qty <= 1) return 'text-[24rem] sm:text-[32rem] md:text-[40rem] lg:text-[48rem]';
+    if (qty <= 2) return 'text-[15rem] sm:text-[20rem] md:text-[25rem]';
+    if (qty <= 4) return 'text-[10rem] sm:text-[12rem] md:text-[15rem]';
+    if (qty <= 9) return 'text-8xl sm:text-[8rem] md:text-[10rem]';
+    return 'text-6xl sm:text-7xl md:text-8xl';
   };
 
   const showSettingsButton = !isOnline || isHost;
