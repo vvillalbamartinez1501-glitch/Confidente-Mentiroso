@@ -149,46 +149,21 @@ export default function RandomNumberGame({
     setIsSettingsOpen(false);
   };
 
-  // Responsive font sizes for numbers based on the count using CSS variables
+  // Responsive font sizes for numbers based on the count using native inline styles
   const getNumberStyle = (qty: number): React.CSSProperties => {
     if (qty <= 1) {
-      return {
-        '--num-size': 'min(95vw, 70vh)',
-        '--num-size-sm': 'min(95vw, 70vh)',
-        '--num-size-md': 'min(95vw, 75vh)',
-        '--num-size-lg': 'min(95vw, 80vh)',
-      } as React.CSSProperties;
+      return { fontSize: 'min(95vw, 70vh)' };
     }
     if (qty <= 2) {
-      return {
-        '--num-size': 'min(65vw, 55vh)',
-        '--num-size-sm': 'min(65vw, 55vh)',
-        '--num-size-md': 'min(65vw, 60vh)',
-        '--num-size-lg': 'min(65vw, 60vh)',
-      } as React.CSSProperties;
+      return { fontSize: 'min(45vw, 55vh)' };
     }
     if (qty <= 4) {
-      return {
-        '--num-size': 'min(45vw, 40vh)',
-        '--num-size-sm': 'min(45vw, 40vh)',
-        '--num-size-md': 'min(45vw, 45vh)',
-        '--num-size-lg': 'min(45vw, 45vh)',
-      } as React.CSSProperties;
+      return { fontSize: 'min(35vw, 40vh)' };
     }
     if (qty <= 9) {
-      return {
-        '--num-size': 'min(30vw, 30vh)',
-        '--num-size-sm': 'min(30vw, 30vh)',
-        '--num-size-md': 'min(30vw, 35vh)',
-        '--num-size-lg': 'min(30vw, 35vh)',
-      } as React.CSSProperties;
+      return { fontSize: 'min(22vw, 30vh)' };
     }
-    return {
-      '--num-size': 'min(20vw, 20vh)',
-      '--num-size-sm': 'min(20vw, 20vh)',
-      '--num-size-md': 'min(20vw, 22vh)',
-      '--num-size-lg': 'min(20vw, 22vh)',
-    } as React.CSSProperties;
+    return { fontSize: 'min(14vw, 18vh)' };
   };
 
   const showSettingsButton = !isOnline || isHost;
@@ -267,7 +242,7 @@ export default function RandomNumberGame({
                     delay: isAnimating ? 0 : i * 0.05 
                   }}
                   style={getNumberStyle(gameState.count)}
-                  className="font-black text-white leading-none drop-shadow-[0_0_35px_rgba(255,255,255,0.2)] font-mono select-none px-2 text-[var(--num-size)] sm:text-[var(--num-size-sm)] md:text-[var(--num-size-md)] lg:text-[var(--num-size-lg)]"
+                  className="font-black text-white leading-none drop-shadow-[0_0_35px_rgba(255,255,255,0.2)] font-mono select-none px-2"
                 >
                   {num}
                 </motion.div>
