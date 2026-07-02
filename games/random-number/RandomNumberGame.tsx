@@ -320,7 +320,7 @@ export default function RandomNumberGame({
                     <input
                       type="number"
                       value={inputMin}
-                      onChange={(e) => setInputMin(e.target.value)}
+                      onChange={(e) => setInputMin(Number(e.target.value)}
                       className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white font-black text-lg focus:outline-none focus:border-amber-500 transition-all font-mono"
                       required
                     />
@@ -334,7 +334,7 @@ export default function RandomNumberGame({
                     <input
                       type="number"
                       value={inputMax}
-                      onChange={(e) => setInputMax(e.target.value)}
+                      onChange={(e) => setInputMax(Number(e.target.value)}
                       className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white font-black text-lg focus:outline-none focus:border-amber-500 transition-all font-mono"
                       required
                     />
@@ -351,7 +351,7 @@ export default function RandomNumberGame({
                     min="1"
                     max="100"
                     value={inputCount}
-                    onChange={(e) => setInputCount(e.target.value)}
+                    onChange={(e) => setInputCount(Number(e.target.value)}
                     className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white font-black text-lg focus:outline-none focus:border-amber-500 transition-all font-mono"
                     required
                   />
