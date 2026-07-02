@@ -157,7 +157,7 @@ export default function RandomNumberPage() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1.1 }}
-            className="w-full flex justify-center z-10"
+            className="w-full flex-1 flex justify-center z-10"
           >
             <RandomNumberGame
               isOnline={isOnline}

@@ -153,41 +153,41 @@ export default function RandomNumberGame({
   const getNumberStyle = (qty: number): React.CSSProperties => {
     if (qty <= 1) {
       return {
-        '--num-size': '24rem',
-        '--num-size-sm': '32rem',
-        '--num-size-md': '40rem',
-        '--num-size-lg': '48rem',
+        '--num-size': 'min(75vw, 55vh)',
+        '--num-size-sm': 'min(75vw, 60vh)',
+        '--num-size-md': 'min(75vw, 65vh)',
+        '--num-size-lg': 'min(75vw, 70vh)',
       } as React.CSSProperties;
     }
     if (qty <= 2) {
       return {
-        '--num-size': '15rem',
-        '--num-size-sm': '20rem',
-        '--num-size-md': '25rem',
-        '--num-size-lg': '25rem',
+        '--num-size': 'min(45vw, 45vh)',
+        '--num-size-sm': 'min(45vw, 45vh)',
+        '--num-size-md': 'min(45vw, 50vh)',
+        '--num-size-lg': 'min(45vw, 50vh)',
       } as React.CSSProperties;
     }
     if (qty <= 4) {
       return {
-        '--num-size': '10rem',
-        '--num-size-sm': '12rem',
-        '--num-size-md': '15rem',
-        '--num-size-lg': '15rem',
+        '--num-size': 'min(30vw, 30vh)',
+        '--num-size-sm': 'min(30vw, 30vh)',
+        '--num-size-md': 'min(30vw, 35vh)',
+        '--num-size-lg': 'min(30vw, 35vh)',
       } as React.CSSProperties;
     }
     if (qty <= 9) {
       return {
-        '--num-size': '6rem',
-        '--num-size-sm': '8rem',
-        '--num-size-md': '10rem',
-        '--num-size-lg': '10rem',
+        '--num-size': 'min(22vw, 22vh)',
+        '--num-size-sm': 'min(22vw, 22vh)',
+        '--num-size-md': 'min(22vw, 25vh)',
+        '--num-size-lg': 'min(22vw, 25vh)',
       } as React.CSSProperties;
     }
     return {
-      '--num-size': '3.75rem',
-      '--num-size-sm': '4.5rem',
-      '--num-size-md': '6rem',
-      '--num-size-lg': '6rem',
+      '--num-size': 'min(15vw, 15vh)',
+      '--num-size-sm': 'min(15vw, 15vh)',
+      '--num-size-md': 'min(15vw, 18vh)',
+      '--num-size-lg': 'min(15vw, 18vh)',
     } as React.CSSProperties;
   };
 
@@ -195,7 +195,7 @@ export default function RandomNumberGame({
   const showGenerateButton = !isOnline || isHost;
 
   return (
-    <div className="w-full max-w-4xl flex flex-col justify-between min-h-[70vh] gap-8 relative z-10 px-4">
+    <div className="w-full max-w-6xl flex flex-col justify-between flex-1 min-h-[80vh] gap-6 relative z-10 px-4">
       {/* Top Header Controls */}
       <div className="flex justify-between items-center w-full">
         <button
@@ -227,7 +227,7 @@ export default function RandomNumberGame({
       </div>
 
       {/* Main Large Display Area */}
-      <div className="flex-1 flex flex-col items-center justify-center min-h-[450px]">
+      <div className="flex-1 flex flex-col items-center justify-center min-h-[350px]">
         <AnimatePresence mode="wait">
           {displayNumbers.length === 0 ? (
             <motion.div
