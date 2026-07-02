@@ -149,13 +149,46 @@ export default function RandomNumberGame({
     setIsSettingsOpen(false);
   };
 
-  // Responsive font sizes for numbers based on the count
-  const getNumberSizeClass = (qty: number) => {
-    if (qty <= 1) return 'text-[24rem] sm:text-[32rem] md:text-[40rem] lg:text-[48rem]';
-    if (qty <= 2) return 'text-[15rem] sm:text-[20rem] md:text-[25rem]';
-    if (qty <= 4) return 'text-[10rem] sm:text-[12rem] md:text-[15rem]';
-    if (qty <= 9) return 'text-8xl sm:text-[8rem] md:text-[10rem]';
-    return 'text-6xl sm:text-7xl md:text-8xl';
+  // Responsive font sizes for numbers based on the count using CSS variables
+  const getNumberStyle = (qty: number): React.CSSProperties => {
+    if (qty <= 1) {
+      return {
+        '--num-size': '24rem',
+        '--num-size-sm': '32rem',
+        '--num-size-md': '40rem',
+        '--num-size-lg': '48rem',
+      } as React.CSSProperties;
+    }
+    if (qty <= 2) {
+      return {
+        '--num-size': '15rem',
+        '--num-size-sm': '20rem',
+        '--num-size-md': '25rem',
+        '--num-size-lg': '25rem',
+      } as React.CSSProperties;
+    }
+    if (qty <= 4) {
+      return {
+        '--num-size': '10rem',
+        '--num-size-sm': '12rem',
+        '--num-size-md': '15rem',
+        '--num-size-lg': '15rem',
+      } as React.CSSProperties;
+    }
+    if (qty <= 9) {
+      return {
+        '--num-size': '6rem',
+        '--num-size-sm': '8rem',
+        '--num-size-md': '10rem',
+        '--num-size-lg': '10rem',
+      } as React.CSSProperties;
+    }
+    return {
+      '--num-size': '3.75rem',
+      '--num-size-sm': '4.5rem',
+      '--num-size-md': '6rem',
+      '--num-size-lg': '6rem',
+    } as React.CSSProperties;
   };
 
   const showSettingsButton = !isOnline || isHost;
@@ -233,9 +266,8 @@ export default function RandomNumberGame({
                     damping: 20, 
                     delay: isAnimating ? 0 : i * 0.05 
                   }}
-                  className={`font-black text-white leading-none drop-shadow-[0_0_35px_rgba(255,255,255,0.2)] font-mono select-none px-4 ${getNumberSizeClass(
-                    gameState.count
-                  )}`}
+                  style={getNumberStyle(gameState.count)}
+                  className="font-black text-white leading-none drop-shadow-[0_0_35px_rgba(255,255,255,0.2)] font-mono select-none px-4 text-[var(--num-size)] sm:text-[var(--num-size-sm)] md:text-[var(--num-size-md)] lg:text-[var(--num-size-lg)]"
                 >
                   {num}
                 </motion.div>
