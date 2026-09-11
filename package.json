@@ -11,6 +11,8 @@
   "dependencies": {
     "@supabase/ssr": "^0.10.3",
     "@supabase/supabase-js": "^2.105.3",
+    "@types/canvas-confetti": "^1.9.0",
+    "canvas-confetti": "^1.9.4",
     "clsx": "^2.1.1",
     "framer-motion": "^12.38.0",
     "googleapis": "^171.4.0",
@@ -18,7 +20,9 @@
     "motion-dom": "^12.38.0",
     "motion-utils": "^12.36.0",
     "next": "^15.0.0",
+    "next-auth": "^5.0.0-beta.32",
     "node-fetch": "^3.3.2",
+    "qrcode.react": "^4.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwind-merge": "^2.5.4"

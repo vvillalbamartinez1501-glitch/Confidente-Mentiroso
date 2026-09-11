@@ -69,22 +69,36 @@ export default function LandingPage() {
               </p>
             </motion.div>
 
-            {/* CTA Button */}
+            {/* CTA Buttons */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
-              className="w-full flex justify-center mb-16"
+              className="w-full flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
             >
+              <Link 
+                href="/host"
+                className="group relative flex items-center justify-center gap-3 px-8 py-5 bg-[#1DB954] hover:bg-[#1ed760] text-black rounded-2xl font-black text-lg uppercase tracking-wider shadow-[0_0_40px_rgba(29,185,84,0.3)] hover:scale-105 transition-all overflow-hidden w-full sm:w-auto"
+              >
+                <Play className="w-5 h-5 fill-current" />
+                Host Game (Spotify)
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+
+              <Link 
+                href="/join"
+                className="group relative flex items-center justify-center gap-3 px-8 py-5 bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-2xl font-black text-lg uppercase tracking-wider hover:scale-105 transition-all w-full sm:w-auto backdrop-blur-md"
+              >
+                <Smartphone className="w-5 h-5 text-emerald-400" />
+                Join Room
+              </Link>
+
               <Link 
                 href="/hub"
                 onClick={() => setIsExiting(true)}
-                className="group relative flex items-center justify-center gap-4 px-12 py-6 bg-white text-black rounded-[2rem] font-black text-xl uppercase tracking-widest shadow-[0_0_50px_rgba(255,255,255,0.2)] hover:scale-105 transition-transform overflow-hidden"
+                className="group relative flex items-center justify-center gap-2 px-6 py-5 text-neutral-400 hover:text-white rounded-2xl font-bold text-sm tracking-wider hover:underline transition-all"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 opacity-0 group-hover:opacity-10 transition-opacity" />
-                <Play className="w-6 h-6 fill-current" />
-                {activeSession ? 'Continuar Partida' : '¡Empezar a Jugar!'}
-                <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
+                Ver otros juegos
               </Link>
             </motion.div>
 

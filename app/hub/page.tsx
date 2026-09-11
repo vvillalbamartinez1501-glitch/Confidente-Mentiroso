@@ -15,6 +15,15 @@ import { Footer } from '../../components/Footer';
 
 const GAMES: GameInfo[] = [
   {
+    id: 'spotify-roulette',
+    title: 'Spotify Roulette',
+    description: 'Adivina de quién es el temazo de Spotify que está sonando. ¡Modo fiesta estilo Jackbox!',
+    icon: '🎵',
+    color: 'from-emerald-600 to-green-700',
+    isNew: true,
+    multiplayer: true
+  },
+  {
     id: 'confidente-mentiroso',
     title: 'Confidente y Mentiroso',
     description: 'Descubre quién dice la verdad en este juego de deducción social.',
@@ -206,7 +215,7 @@ export default function GameHub() {
               transition={{ delay: i * 0.1 }}
             >
               <Link 
-                href={game.id === 'confidente-mentiroso' || game.id === 'impostor' || game.id === 'truth-or-dare' || game.id === 'random-number' || game.id === 'trivia-caotica' ? `/juego/${game.id}` : '#'}
+                href={game.id === 'spotify-roulette' ? '/host' : (game.id === 'confidente-mentiroso' || game.id === 'impostor' || game.id === 'truth-or-dare' || game.id === 'random-number' || game.id === 'trivia-caotica' ? `/juego/${game.id}` : '#')}
                 className={`group relative flex flex-col h-full bg-gradient-to-br ${game.color} rounded-[2.5rem] p-8 overflow-hidden shadow-2xl hover:scale-[1.03] transition-all duration-500 border border-white/10`}
               >
                 <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:rotate-12 transition-transform duration-700">

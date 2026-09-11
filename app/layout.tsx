@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description: 'Un juego de deducción social para 3 o más jugadores.',
 }
 
-import { GlobalProvider } from '../context/GlobalContext';
+import { Providers } from '../components/Providers';
 
 export default function RootLayout({
   children,
@@ -19,9 +19,9 @@ export default function RootLayout({
         <meta charSet="utf-8" />
       </head>
       <body className="min-h-screen flex flex-col bg-[#0f111a] text-white">
-        <GlobalProvider>
+        <Providers>
           {children}
-        </GlobalProvider>
+        </Providers>
       </body>
     </html>
   );
