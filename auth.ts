@@ -24,7 +24,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       authorization: `https://accounts.spotify.com/authorize?scope=${encodeURIComponent(SPOTIFY_SCOPES)}&show_dialog=true`,
     }),
   ],
-  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || 'fallback-secret-for-development-32chars',
+  trustHost: true,
+  secret: process.env.NEXTAUTH_SECRET || process.env.AUTH_SECRET || 'fallback-secret-for-development-32chars',
   callbacks: {
     async jwt({ token, account, user }) {
       // Initial sign-in

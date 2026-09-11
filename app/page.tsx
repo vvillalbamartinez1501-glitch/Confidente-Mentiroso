@@ -1,157 +1,191 @@
 'use client';
 
 import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { 
-  Gamepad2, Smartphone, ShieldCheck, Zap, 
-  ArrowRight, Play, Sparkles
+  LogIn, LogOut, CheckCircle2, Music, 
+  Key, ShieldCheck, User, Sparkles, Play, ArrowRight, Smartphone
 } from 'lucide-react';
 import Link from 'next/link';
-import { useGlobalContext } from '../context/GlobalContext';
+import { useSession, signIn, signOut } from 'next-auth/react';
 import { Footer } from '../components/Footer';
 
 export default function LandingPage() {
-  const { activeSession } = useGlobalContext();
-  const [isExiting, setIsExiting] = React.useState(false);
+  const { data: session, status } = useSession();
+  const isLoading = status === 'loading';
+  const isAuthenticated = status === 'authenticated';
+
+  const tokenSnippet = session?.accessToken 
+    ? `${session.accessToken.slice(0, 14)}...${session.accessToken.slice(-8)}`
+    : 'No access token available';
 
   return (
-    <AnimatePresence>
-      {!isExiting && (
-        <main className="relative flex flex-col items-center justify-center min-h-screen bg-[#0a0b14] text-white overflow-hidden">
-          
-          {/* Animated Background Elements */}
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <motion.div 
-              animate={{ 
-                scale: [1, 1.2, 1],
-                opacity: [0.1, 0.2, 0.1],
-                rotate: [0, 90, 0]
-              }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              className="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] bg-blue-600/20 rounded-full blur-[120px]" 
-            />
-            <motion.div 
-              animate={{ 
-                scale: [1.2, 1, 1.2],
-                opacity: [0.1, 0.15, 0.1],
-                rotate: [0, -90, 0]
-              }}
-              transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-              className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[100px]" 
-            />
-          </div>
+    <main className="relative flex flex-col items-center justify-between min-h-screen bg-[#0a0c10] text-white overflow-hidden px-6 py-10">
+      
+      {/* Dynamic Background Glow */}
+      <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-[#1DB954]/10 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[140px] pointer-events-none" />
 
-          {/* Content Wrapper */}
-          <div className="relative z-10 flex flex-col items-center w-full max-w-4xl px-6 text-center">
-            
-            {/* Logo Badge */}
-            <motion.div 
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-2xl border border-white/10 mb-8 backdrop-blur-xl"
-            >
-              <Sparkles className="w-4 h-4 text-blue-400" />
-              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-400">Next-Gen Party Gaming</span>
-            </motion.div>
+      {/* Header Badge */}
+      <div className="relative z-10 flex flex-col items-center w-full max-w-4xl text-center">
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-2xl border border-white/10 mb-6 backdrop-blur-xl"
+        >
+          <Sparkles className="w-4 h-4 text-emerald-400" />
+          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-400">
+            Spotify Roulette • Auth Engine
+          </span>
+        </motion.div>
 
-            {/* Hero Text */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-            >
-              <h1 className="text-5xl sm:text-8xl font-black mb-6 tracking-tighter uppercase leading-[0.9]">
-                PARTY<br/>
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600">GAMES</span> HUB
-              </h1>
-              <p className="text-gray-400 text-lg sm:text-xl font-medium max-w-lg mx-auto leading-relaxed mb-12">
-                Risas, engaños y verdades en un solo lugar. Transforma cualquier reunión en una experiencia inolvidable.
-              </p>
-            </motion.div>
+        {/* Hero Title */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+        >
+          <h1 className="text-5xl sm:text-7xl font-black mb-4 tracking-tighter uppercase leading-[0.95]">
+            Spotify <span className="text-emerald-400">Roulette</span>
+          </h1>
+          <p className="text-gray-400 text-base sm:text-lg font-medium max-w-md mx-auto leading-relaxed mb-8">
+            Guess whose top Spotify track is playing in real-time. Test your Spotify OAuth integration below.
+          </p>
+        </motion.div>
 
-            {/* CTA Buttons */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
-              className="w-full flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
-            >
-              <Link 
-                href="/host"
-                className="group relative flex items-center justify-center gap-3 px-8 py-5 bg-[#1DB954] hover:bg-[#1ed760] text-black rounded-2xl font-black text-lg uppercase tracking-wider shadow-[0_0_40px_rgba(29,185,84,0.3)] hover:scale-105 transition-all overflow-hidden w-full sm:w-auto"
-              >
-                <Play className="w-5 h-5 fill-current" />
-                Host Game (Spotify)
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Link>
-
-              <Link 
-                href="/join"
-                className="group relative flex items-center justify-center gap-3 px-8 py-5 bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-2xl font-black text-lg uppercase tracking-wider hover:scale-105 transition-all w-full sm:w-auto backdrop-blur-md"
-              >
-                <Smartphone className="w-5 h-5 text-emerald-400" />
-                Join Room
-              </Link>
-
-              <Link 
-                href="/hub"
-                onClick={() => setIsExiting(true)}
-                className="group relative flex items-center justify-center gap-2 px-6 py-5 text-neutral-400 hover:text-white rounded-2xl font-bold text-sm tracking-wider hover:underline transition-all"
-              >
-                Ver otros juegos
-              </Link>
-            </motion.div>
-
-            {/* Features Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full mb-12">
-              {[
-                { icon: Smartphone, title: "Híbrido", desc: "Un móvil o cada uno con el suyo." },
-                { icon: ShieldCheck, title: "Privacidad", desc: "Datos seguros y juego offline." },
-                { icon: Zap, title: "Rápido", desc: "Listo para jugar en 30 segundos." }
-              ].map((f, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5 + i * 0.1 }}
-                  className="p-6 bg-white/[0.03] border border-white/5 rounded-3xl backdrop-blur-sm flex flex-col items-center gap-3 group hover:bg-white/[0.05] transition-colors"
-                >
-                  <div className="p-3 bg-white/5 rounded-2xl group-hover:bg-white/10 transition-colors">
-                    <f.icon className="w-6 h-6 text-indigo-400" />
-                  </div>
-                  <h3 className="font-black uppercase text-xs tracking-widest text-white">{f.title}</h3>
-                  <p className="text-gray-500 text-[10px] font-bold uppercase leading-relaxed">{f.desc}</p>
-                </motion.div>
-              ))}
+        {/* Phase 1: Spotify Authentication Card */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.2 }}
+          className="w-full max-w-lg bg-neutral-900/90 border border-neutral-800 rounded-3xl p-6 sm:p-8 shadow-2xl backdrop-blur-xl mb-10 text-left relative overflow-hidden"
+        >
+          <div className="flex items-center justify-between pb-4 border-b border-neutral-800 mb-6">
+            <div className="flex items-center gap-2">
+              <Music className="w-5 h-5 text-emerald-400" />
+              <h2 className="text-base font-bold text-white uppercase tracking-wider">
+                Spotify Authentication
+              </h2>
             </div>
-
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-neutral-800 text-xs font-semibold">
+              <span className={`w-2 h-2 rounded-full ${isAuthenticated ? 'bg-emerald-400 animate-pulse' : 'bg-neutral-500'}`} />
+              <span className="text-[11px] text-neutral-300">
+                {isLoading ? 'Checking...' : isAuthenticated ? 'Connected' : 'Not Connected'}
+              </span>
+            </div>
           </div>
 
-          <Footer />
+          {!isAuthenticated ? (
+            <div className="flex flex-col items-center text-center py-4">
+              <div className="w-16 h-16 rounded-2xl bg-[#1DB954]/15 border border-[#1DB954]/30 flex items-center justify-center text-[#1DB954] mb-4">
+                <LogIn className="w-8 h-8" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">
+                Connect your Spotify Account
+              </h3>
+              <p className="text-xs text-neutral-400 mb-6 max-w-sm">
+                NextAuth will authenticate with Spotify and grant the required permissions to stream music and read your top tracks.
+              </p>
 
-          {/* Exit Transition Overlay */}
-          <AnimatePresence>
-            {isExiting && (
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-[#0a0b14] z-[100] flex items-center justify-center"
+              <button
+                onClick={() => signIn('spotify')}
+                disabled={isLoading}
+                className="w-full sm:w-auto flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-[#1DB954] hover:bg-[#1ed760] text-black font-black text-base shadow-xl shadow-[#1DB954]/25 hover:scale-105 transition-all active:scale-95 disabled:opacity-50"
               >
-                <motion.div 
-                  initial={{ scale: 0.8, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  className="flex flex-col items-center gap-4"
-                >
-                  <Gamepad2 className="w-12 h-12 text-blue-500 animate-bounce" />
-                  <span className="text-[10px] font-black uppercase tracking-[0.5em] text-blue-500">Cargando Catálogo...</span>
-                </motion.div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                <LogIn className="w-5 h-5" />
+                <span>Login with Spotify</span>
+              </button>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-6">
+              {/* Profile Overview */}
+              <div className="flex items-center gap-4 p-4 rounded-2xl bg-neutral-800/60 border border-neutral-700/50">
+                {session?.user?.image ? (
+                  <img
+                    src={session.user.image}
+                    alt={session.user.name || 'User Avatar'}
+                    className="w-16 h-16 rounded-full object-cover border-2 border-emerald-400 shadow-md"
+                  />
+                ) : (
+                  <div className="w-16 h-16 rounded-full bg-neutral-700 flex items-center justify-center text-neutral-300 border-2 border-emerald-400">
+                    <User className="w-8 h-8" />
+                  </div>
+                )}
+                <div className="overflow-hidden">
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-lg font-black text-white truncate">
+                      {session?.user?.name || 'Spotify User'}
+                    </h3>
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                  </div>
+                  <p className="text-xs text-neutral-400 truncate">
+                    {session?.user?.email || 'Spotify Account'}
+                  </p>
+                  <span className="inline-block mt-1 text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20 uppercase tracking-widest">
+                    ID: {session?.user?.id || 'Connected'}
+                  </span>
+                </div>
+              </div>
 
-        </main>
-      )}
-    </AnimatePresence>
+              {/* Access Token Snippet for Verification */}
+              <div className="p-4 rounded-2xl bg-neutral-950 border border-neutral-800">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="flex items-center gap-1.5 text-xs font-bold text-neutral-300">
+                    <Key className="w-3.5 h-3.5 text-emerald-400" />
+                    Captured Access Token:
+                  </span>
+                  <span className="text-[10px] text-emerald-400 font-mono font-semibold">
+                    persisted in JWT & Session
+                  </span>
+                </div>
+                <div className="p-2.5 rounded-xl bg-neutral-900 border border-neutral-800/80 font-mono text-xs text-neutral-300 break-all select-all">
+                  {tokenSnippet}
+                </div>
+              </div>
+
+              {/* Scopes Verified Notice */}
+              <div className="flex items-start gap-2.5 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs">
+                <ShieldCheck className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                <span>
+                  OAuth Scopes configured: <code className="text-white font-mono text-[10px]">user-read-email, user-top-read, streaming, playback-state</code>
+                </span>
+              </div>
+
+              {/* Navigation & Logout Controls */}
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+                <Link
+                  href="/host"
+                  className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-black text-sm transition-all shadow-lg hover:shadow-emerald-500/20"
+                >
+                  <Play className="w-4 h-4 fill-current" />
+                  <span>Go to Host Screen</span>
+                </Link>
+
+                <button
+                  onClick={() => signOut()}
+                  className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-rose-300 hover:text-rose-200 text-xs font-bold transition-all border border-neutral-700"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span>Logout</span>
+                </button>
+              </div>
+            </div>
+          )}
+        </motion.div>
+
+        {/* Quick Links */}
+        <div className="flex items-center justify-center gap-4 text-xs text-neutral-400">
+          <Link href="/join" className="hover:text-white transition-colors underline underline-offset-4">
+            Join a Room
+          </Link>
+          <span>•</span>
+          <Link href="/hub" className="hover:text-white transition-colors underline underline-offset-4">
+            Party Games Hub
+          </Link>
+        </div>
+      </div>
+
+      <Footer />
+    </main>
   );
 }
